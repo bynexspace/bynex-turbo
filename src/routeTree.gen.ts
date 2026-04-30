@@ -12,14 +12,20 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppTarefasRouteImport } from './routes/_app.tarefas'
+import { Route as AppPlanoRouteImport } from './routes/_app.plano'
+import { Route as AppLinkedinRouteImport } from './routes/_app.linkedin'
 import { Route as AppLeadsRouteImport } from './routes/_app.leads'
 import { Route as AppInteligenciaRouteImport } from './routes/_app.inteligencia'
 import { Route as AppIntegracoesRouteImport } from './routes/_app.integracoes'
 import { Route as AppIaRouteImport } from './routes/_app.ia'
 import { Route as AppGoogleMapsRouteImport } from './routes/_app.google-maps'
+import { Route as AppFlowsRouteImport } from './routes/_app.flows'
+import { Route as AppEducacaoRouteImport } from './routes/_app.educacao'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppCrmRouteImport } from './routes/_app.crm'
 import { Route as AppCnaeRouteImport } from './routes/_app.cnae'
+import { Route as AppAdminRouteImport } from './routes/_app.admin'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -34,6 +40,21 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppTarefasRoute = AppTarefasRouteImport.update({
+  id: '/tarefas',
+  path: '/tarefas',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPlanoRoute = AppPlanoRouteImport.update({
+  id: '/plano',
+  path: '/plano',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLinkedinRoute = AppLinkedinRouteImport.update({
+  id: '/linkedin',
+  path: '/linkedin',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppLeadsRoute = AppLeadsRouteImport.update({
   id: '/leads',
@@ -60,6 +81,16 @@ const AppGoogleMapsRoute = AppGoogleMapsRouteImport.update({
   path: '/google-maps',
   getParentRoute: () => AppRoute,
 } as any)
+const AppFlowsRoute = AppFlowsRouteImport.update({
+  id: '/flows',
+  path: '/flows',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppEducacaoRoute = AppEducacaoRouteImport.update({
+  id: '/educacao',
+  path: '/educacao',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -75,83 +106,124 @@ const AppCnaeRoute = AppCnaeRouteImport.update({
   path: '/cnae',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAdminRoute = AppAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/admin': typeof AppAdminRoute
   '/cnae': typeof AppCnaeRoute
   '/crm': typeof AppCrmRoute
   '/dashboard': typeof AppDashboardRoute
+  '/educacao': typeof AppEducacaoRoute
+  '/flows': typeof AppFlowsRoute
   '/google-maps': typeof AppGoogleMapsRoute
   '/ia': typeof AppIaRoute
   '/integracoes': typeof AppIntegracoesRoute
   '/inteligencia': typeof AppInteligenciaRoute
   '/leads': typeof AppLeadsRoute
+  '/linkedin': typeof AppLinkedinRoute
+  '/plano': typeof AppPlanoRoute
+  '/tarefas': typeof AppTarefasRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/admin': typeof AppAdminRoute
   '/cnae': typeof AppCnaeRoute
   '/crm': typeof AppCrmRoute
   '/dashboard': typeof AppDashboardRoute
+  '/educacao': typeof AppEducacaoRoute
+  '/flows': typeof AppFlowsRoute
   '/google-maps': typeof AppGoogleMapsRoute
   '/ia': typeof AppIaRoute
   '/integracoes': typeof AppIntegracoesRoute
   '/inteligencia': typeof AppInteligenciaRoute
   '/leads': typeof AppLeadsRoute
+  '/linkedin': typeof AppLinkedinRoute
+  '/plano': typeof AppPlanoRoute
+  '/tarefas': typeof AppTarefasRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
+  '/_app/admin': typeof AppAdminRoute
   '/_app/cnae': typeof AppCnaeRoute
   '/_app/crm': typeof AppCrmRoute
   '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/educacao': typeof AppEducacaoRoute
+  '/_app/flows': typeof AppFlowsRoute
   '/_app/google-maps': typeof AppGoogleMapsRoute
   '/_app/ia': typeof AppIaRoute
   '/_app/integracoes': typeof AppIntegracoesRoute
   '/_app/inteligencia': typeof AppInteligenciaRoute
   '/_app/leads': typeof AppLeadsRoute
+  '/_app/linkedin': typeof AppLinkedinRoute
+  '/_app/plano': typeof AppPlanoRoute
+  '/_app/tarefas': typeof AppTarefasRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/login'
+    | '/admin'
     | '/cnae'
     | '/crm'
     | '/dashboard'
+    | '/educacao'
+    | '/flows'
     | '/google-maps'
     | '/ia'
     | '/integracoes'
     | '/inteligencia'
     | '/leads'
+    | '/linkedin'
+    | '/plano'
+    | '/tarefas'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
+    | '/admin'
     | '/cnae'
     | '/crm'
     | '/dashboard'
+    | '/educacao'
+    | '/flows'
     | '/google-maps'
     | '/ia'
     | '/integracoes'
     | '/inteligencia'
     | '/leads'
+    | '/linkedin'
+    | '/plano'
+    | '/tarefas'
   id:
     | '__root__'
     | '/'
     | '/_app'
     | '/login'
+    | '/_app/admin'
     | '/_app/cnae'
     | '/_app/crm'
     | '/_app/dashboard'
+    | '/_app/educacao'
+    | '/_app/flows'
     | '/_app/google-maps'
     | '/_app/ia'
     | '/_app/integracoes'
     | '/_app/inteligencia'
     | '/_app/leads'
+    | '/_app/linkedin'
+    | '/_app/plano'
+    | '/_app/tarefas'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -182,6 +254,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_app/tarefas': {
+      id: '/_app/tarefas'
+      path: '/tarefas'
+      fullPath: '/tarefas'
+      preLoaderRoute: typeof AppTarefasRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/plano': {
+      id: '/_app/plano'
+      path: '/plano'
+      fullPath: '/plano'
+      preLoaderRoute: typeof AppPlanoRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/linkedin': {
+      id: '/_app/linkedin'
+      path: '/linkedin'
+      fullPath: '/linkedin'
+      preLoaderRoute: typeof AppLinkedinRouteImport
+      parentRoute: typeof AppRoute
     }
     '/_app/leads': {
       id: '/_app/leads'
@@ -218,6 +311,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppGoogleMapsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/flows': {
+      id: '/_app/flows'
+      path: '/flows'
+      fullPath: '/flows'
+      preLoaderRoute: typeof AppFlowsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/educacao': {
+      id: '/_app/educacao'
+      path: '/educacao'
+      fullPath: '/educacao'
+      preLoaderRoute: typeof AppEducacaoRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/dashboard': {
       id: '/_app/dashboard'
       path: '/dashboard'
@@ -239,29 +346,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCnaeRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/admin': {
+      id: '/_app/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AppAdminRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
+  AppAdminRoute: typeof AppAdminRoute
   AppCnaeRoute: typeof AppCnaeRoute
   AppCrmRoute: typeof AppCrmRoute
   AppDashboardRoute: typeof AppDashboardRoute
+  AppEducacaoRoute: typeof AppEducacaoRoute
+  AppFlowsRoute: typeof AppFlowsRoute
   AppGoogleMapsRoute: typeof AppGoogleMapsRoute
   AppIaRoute: typeof AppIaRoute
   AppIntegracoesRoute: typeof AppIntegracoesRoute
   AppInteligenciaRoute: typeof AppInteligenciaRoute
   AppLeadsRoute: typeof AppLeadsRoute
+  AppLinkedinRoute: typeof AppLinkedinRoute
+  AppPlanoRoute: typeof AppPlanoRoute
+  AppTarefasRoute: typeof AppTarefasRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAdminRoute: AppAdminRoute,
   AppCnaeRoute: AppCnaeRoute,
   AppCrmRoute: AppCrmRoute,
   AppDashboardRoute: AppDashboardRoute,
+  AppEducacaoRoute: AppEducacaoRoute,
+  AppFlowsRoute: AppFlowsRoute,
   AppGoogleMapsRoute: AppGoogleMapsRoute,
   AppIaRoute: AppIaRoute,
   AppIntegracoesRoute: AppIntegracoesRoute,
   AppInteligenciaRoute: AppInteligenciaRoute,
   AppLeadsRoute: AppLeadsRoute,
+  AppLinkedinRoute: AppLinkedinRoute,
+  AppPlanoRoute: AppPlanoRoute,
+  AppTarefasRoute: AppTarefasRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)

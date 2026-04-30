@@ -23,7 +23,7 @@ function TarefasPage() {
   };
   useEffect(() => { load(); }, [workspace]);
 
-  const updateStatus = async (id: string, status: string) => {
+  const updateStatus = async (id: string, status: "feita" | "adiada") => {
     await supabase.from("tasks").update({ status }).eq("id", id);
     toast.success(status === "feita" ? "Concluída" : "Adiada");
     load();

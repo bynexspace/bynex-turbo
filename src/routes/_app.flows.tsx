@@ -18,9 +18,12 @@ function FlowsPage() {
   const [open, setOpen] = useState(false);
   const [nome, setNome] = useState(""); const [desc, setDesc] = useState("");
 
-  const load = () => workspace && supabase.from("flows").select("*").eq("workspace_id", workspace.id)
-    .then(({ data }) => setFlows(data ?? []));
-  useEffect(load, [workspace]);
+  const load = () => {
+    if (!workspace) return;
+    supabase.from("flows").select("*").eq("workspace_id", workspace.id)
+      .then(({ data }) => setFlows(data ?? []));
+  };
+  useEffect(() => { load(); }, [workspace]);
 
   const criar = async () => {
     if (!nome) return;
