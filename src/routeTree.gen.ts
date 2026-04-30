@@ -9,38 +9,284 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiApifySearchRouteImport } from './routes/api.apify-search'
+import { Route as ApiAiIntelRouteImport } from './routes/api.ai-intel'
+import { Route as ApiAiChatRouteImport } from './routes/api.ai-chat'
+import { Route as AppTarefasRouteImport } from './routes/_app.tarefas'
+import { Route as AppPlanoRouteImport } from './routes/_app.plano'
+import { Route as AppLinkedinRouteImport } from './routes/_app.linkedin'
+import { Route as AppLeadsRouteImport } from './routes/_app.leads'
+import { Route as AppInteligenciaRouteImport } from './routes/_app.inteligencia'
+import { Route as AppIntegracoesRouteImport } from './routes/_app.integracoes'
+import { Route as AppIaRouteImport } from './routes/_app.ia'
+import { Route as AppGoogleMapsRouteImport } from './routes/_app.google-maps'
+import { Route as AppFlowsRouteImport } from './routes/_app.flows'
+import { Route as AppEducacaoRouteImport } from './routes/_app.educacao'
+import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
+import { Route as AppCrmRouteImport } from './routes/_app.crm'
+import { Route as AppCnaeRouteImport } from './routes/_app.cnae'
+import { Route as AppAdminRouteImport } from './routes/_app.admin'
 
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiApifySearchRoute = ApiApifySearchRouteImport.update({
+  id: '/api/apify-search',
+  path: '/api/apify-search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAiIntelRoute = ApiAiIntelRouteImport.update({
+  id: '/api/ai-intel',
+  path: '/api/ai-intel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAiChatRoute = ApiAiChatRouteImport.update({
+  id: '/api/ai-chat',
+  path: '/api/ai-chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppTarefasRoute = AppTarefasRouteImport.update({
+  id: '/tarefas',
+  path: '/tarefas',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPlanoRoute = AppPlanoRouteImport.update({
+  id: '/plano',
+  path: '/plano',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLinkedinRoute = AppLinkedinRouteImport.update({
+  id: '/linkedin',
+  path: '/linkedin',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLeadsRoute = AppLeadsRouteImport.update({
+  id: '/leads',
+  path: '/leads',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppInteligenciaRoute = AppInteligenciaRouteImport.update({
+  id: '/inteligencia',
+  path: '/inteligencia',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppIntegracoesRoute = AppIntegracoesRouteImport.update({
+  id: '/integracoes',
+  path: '/integracoes',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppIaRoute = AppIaRouteImport.update({
+  id: '/ia',
+  path: '/ia',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppGoogleMapsRoute = AppGoogleMapsRouteImport.update({
+  id: '/google-maps',
+  path: '/google-maps',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFlowsRoute = AppFlowsRouteImport.update({
+  id: '/flows',
+  path: '/flows',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppEducacaoRoute = AppEducacaoRouteImport.update({
+  id: '/educacao',
+  path: '/educacao',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCrmRoute = AppCrmRouteImport.update({
+  id: '/crm',
+  path: '/crm',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCnaeRoute = AppCnaeRouteImport.update({
+  id: '/cnae',
+  path: '/cnae',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAdminRoute = AppAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/admin': typeof AppAdminRoute
+  '/cnae': typeof AppCnaeRoute
+  '/crm': typeof AppCrmRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/educacao': typeof AppEducacaoRoute
+  '/flows': typeof AppFlowsRoute
+  '/google-maps': typeof AppGoogleMapsRoute
+  '/ia': typeof AppIaRoute
+  '/integracoes': typeof AppIntegracoesRoute
+  '/inteligencia': typeof AppInteligenciaRoute
+  '/leads': typeof AppLeadsRoute
+  '/linkedin': typeof AppLinkedinRoute
+  '/plano': typeof AppPlanoRoute
+  '/tarefas': typeof AppTarefasRoute
+  '/api/ai-chat': typeof ApiAiChatRoute
+  '/api/ai-intel': typeof ApiAiIntelRoute
+  '/api/apify-search': typeof ApiApifySearchRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/admin': typeof AppAdminRoute
+  '/cnae': typeof AppCnaeRoute
+  '/crm': typeof AppCrmRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/educacao': typeof AppEducacaoRoute
+  '/flows': typeof AppFlowsRoute
+  '/google-maps': typeof AppGoogleMapsRoute
+  '/ia': typeof AppIaRoute
+  '/integracoes': typeof AppIntegracoesRoute
+  '/inteligencia': typeof AppInteligenciaRoute
+  '/leads': typeof AppLeadsRoute
+  '/linkedin': typeof AppLinkedinRoute
+  '/plano': typeof AppPlanoRoute
+  '/tarefas': typeof AppTarefasRoute
+  '/api/ai-chat': typeof ApiAiChatRoute
+  '/api/ai-intel': typeof ApiAiIntelRoute
+  '/api/apify-search': typeof ApiApifySearchRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_app': typeof AppRouteWithChildren
+  '/login': typeof LoginRoute
+  '/_app/admin': typeof AppAdminRoute
+  '/_app/cnae': typeof AppCnaeRoute
+  '/_app/crm': typeof AppCrmRoute
+  '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/educacao': typeof AppEducacaoRoute
+  '/_app/flows': typeof AppFlowsRoute
+  '/_app/google-maps': typeof AppGoogleMapsRoute
+  '/_app/ia': typeof AppIaRoute
+  '/_app/integracoes': typeof AppIntegracoesRoute
+  '/_app/inteligencia': typeof AppInteligenciaRoute
+  '/_app/leads': typeof AppLeadsRoute
+  '/_app/linkedin': typeof AppLinkedinRoute
+  '/_app/plano': typeof AppPlanoRoute
+  '/_app/tarefas': typeof AppTarefasRoute
+  '/api/ai-chat': typeof ApiAiChatRoute
+  '/api/ai-intel': typeof ApiAiIntelRoute
+  '/api/apify-search': typeof ApiApifySearchRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/admin'
+    | '/cnae'
+    | '/crm'
+    | '/dashboard'
+    | '/educacao'
+    | '/flows'
+    | '/google-maps'
+    | '/ia'
+    | '/integracoes'
+    | '/inteligencia'
+    | '/leads'
+    | '/linkedin'
+    | '/plano'
+    | '/tarefas'
+    | '/api/ai-chat'
+    | '/api/ai-intel'
+    | '/api/apify-search'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/login'
+    | '/admin'
+    | '/cnae'
+    | '/crm'
+    | '/dashboard'
+    | '/educacao'
+    | '/flows'
+    | '/google-maps'
+    | '/ia'
+    | '/integracoes'
+    | '/inteligencia'
+    | '/leads'
+    | '/linkedin'
+    | '/plano'
+    | '/tarefas'
+    | '/api/ai-chat'
+    | '/api/ai-intel'
+    | '/api/apify-search'
+  id:
+    | '__root__'
+    | '/'
+    | '/_app'
+    | '/login'
+    | '/_app/admin'
+    | '/_app/cnae'
+    | '/_app/crm'
+    | '/_app/dashboard'
+    | '/_app/educacao'
+    | '/_app/flows'
+    | '/_app/google-maps'
+    | '/_app/ia'
+    | '/_app/integracoes'
+    | '/_app/inteligencia'
+    | '/_app/leads'
+    | '/_app/linkedin'
+    | '/_app/plano'
+    | '/_app/tarefas'
+    | '/api/ai-chat'
+    | '/api/ai-intel'
+    | '/api/apify-search'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
+  LoginRoute: typeof LoginRoute
+  ApiAiChatRoute: typeof ApiAiChatRoute
+  ApiAiIntelRoute: typeof ApiAiIntelRoute
+  ApiApifySearchRoute: typeof ApiApifySearchRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +294,171 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/apify-search': {
+      id: '/api/apify-search'
+      path: '/api/apify-search'
+      fullPath: '/api/apify-search'
+      preLoaderRoute: typeof ApiApifySearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/ai-intel': {
+      id: '/api/ai-intel'
+      path: '/api/ai-intel'
+      fullPath: '/api/ai-intel'
+      preLoaderRoute: typeof ApiAiIntelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/ai-chat': {
+      id: '/api/ai-chat'
+      path: '/api/ai-chat'
+      fullPath: '/api/ai-chat'
+      preLoaderRoute: typeof ApiAiChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/tarefas': {
+      id: '/_app/tarefas'
+      path: '/tarefas'
+      fullPath: '/tarefas'
+      preLoaderRoute: typeof AppTarefasRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/plano': {
+      id: '/_app/plano'
+      path: '/plano'
+      fullPath: '/plano'
+      preLoaderRoute: typeof AppPlanoRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/linkedin': {
+      id: '/_app/linkedin'
+      path: '/linkedin'
+      fullPath: '/linkedin'
+      preLoaderRoute: typeof AppLinkedinRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/leads': {
+      id: '/_app/leads'
+      path: '/leads'
+      fullPath: '/leads'
+      preLoaderRoute: typeof AppLeadsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/inteligencia': {
+      id: '/_app/inteligencia'
+      path: '/inteligencia'
+      fullPath: '/inteligencia'
+      preLoaderRoute: typeof AppInteligenciaRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/integracoes': {
+      id: '/_app/integracoes'
+      path: '/integracoes'
+      fullPath: '/integracoes'
+      preLoaderRoute: typeof AppIntegracoesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/ia': {
+      id: '/_app/ia'
+      path: '/ia'
+      fullPath: '/ia'
+      preLoaderRoute: typeof AppIaRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/google-maps': {
+      id: '/_app/google-maps'
+      path: '/google-maps'
+      fullPath: '/google-maps'
+      preLoaderRoute: typeof AppGoogleMapsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/flows': {
+      id: '/_app/flows'
+      path: '/flows'
+      fullPath: '/flows'
+      preLoaderRoute: typeof AppFlowsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/educacao': {
+      id: '/_app/educacao'
+      path: '/educacao'
+      fullPath: '/educacao'
+      preLoaderRoute: typeof AppEducacaoRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/dashboard': {
+      id: '/_app/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/crm': {
+      id: '/_app/crm'
+      path: '/crm'
+      fullPath: '/crm'
+      preLoaderRoute: typeof AppCrmRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/cnae': {
+      id: '/_app/cnae'
+      path: '/cnae'
+      fullPath: '/cnae'
+      preLoaderRoute: typeof AppCnaeRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/admin': {
+      id: '/_app/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AppAdminRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppAdminRoute: typeof AppAdminRoute
+  AppCnaeRoute: typeof AppCnaeRoute
+  AppCrmRoute: typeof AppCrmRoute
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppEducacaoRoute: typeof AppEducacaoRoute
+  AppFlowsRoute: typeof AppFlowsRoute
+  AppGoogleMapsRoute: typeof AppGoogleMapsRoute
+  AppIaRoute: typeof AppIaRoute
+  AppIntegracoesRoute: typeof AppIntegracoesRoute
+  AppInteligenciaRoute: typeof AppInteligenciaRoute
+  AppLeadsRoute: typeof AppLeadsRoute
+  AppLinkedinRoute: typeof AppLinkedinRoute
+  AppPlanoRoute: typeof AppPlanoRoute
+  AppTarefasRoute: typeof AppTarefasRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppAdminRoute: AppAdminRoute,
+  AppCnaeRoute: AppCnaeRoute,
+  AppCrmRoute: AppCrmRoute,
+  AppDashboardRoute: AppDashboardRoute,
+  AppEducacaoRoute: AppEducacaoRoute,
+  AppFlowsRoute: AppFlowsRoute,
+  AppGoogleMapsRoute: AppGoogleMapsRoute,
+  AppIaRoute: AppIaRoute,
+  AppIntegracoesRoute: AppIntegracoesRoute,
+  AppInteligenciaRoute: AppInteligenciaRoute,
+  AppLeadsRoute: AppLeadsRoute,
+  AppLinkedinRoute: AppLinkedinRoute,
+  AppPlanoRoute: AppPlanoRoute,
+  AppTarefasRoute: AppTarefasRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
+  LoginRoute: LoginRoute,
+  ApiAiChatRoute: ApiAiChatRoute,
+  ApiAiIntelRoute: ApiAiIntelRoute,
+  ApiApifySearchRoute: ApiApifySearchRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
