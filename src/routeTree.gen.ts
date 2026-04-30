@@ -13,8 +13,13 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppLeadsRouteImport } from './routes/_app.leads'
+import { Route as AppInteligenciaRouteImport } from './routes/_app.inteligencia'
+import { Route as AppIntegracoesRouteImport } from './routes/_app.integracoes'
+import { Route as AppIaRouteImport } from './routes/_app.ia'
+import { Route as AppGoogleMapsRouteImport } from './routes/_app.google-maps'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppCrmRouteImport } from './routes/_app.crm'
+import { Route as AppCnaeRouteImport } from './routes/_app.cnae'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -35,6 +40,26 @@ const AppLeadsRoute = AppLeadsRouteImport.update({
   path: '/leads',
   getParentRoute: () => AppRoute,
 } as any)
+const AppInteligenciaRoute = AppInteligenciaRouteImport.update({
+  id: '/inteligencia',
+  path: '/inteligencia',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppIntegracoesRoute = AppIntegracoesRouteImport.update({
+  id: '/integracoes',
+  path: '/integracoes',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppIaRoute = AppIaRouteImport.update({
+  id: '/ia',
+  path: '/ia',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppGoogleMapsRoute = AppGoogleMapsRouteImport.update({
+  id: '/google-maps',
+  path: '/google-maps',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -45,19 +70,34 @@ const AppCrmRoute = AppCrmRouteImport.update({
   path: '/crm',
   getParentRoute: () => AppRoute,
 } as any)
+const AppCnaeRoute = AppCnaeRouteImport.update({
+  id: '/cnae',
+  path: '/cnae',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/cnae': typeof AppCnaeRoute
   '/crm': typeof AppCrmRoute
   '/dashboard': typeof AppDashboardRoute
+  '/google-maps': typeof AppGoogleMapsRoute
+  '/ia': typeof AppIaRoute
+  '/integracoes': typeof AppIntegracoesRoute
+  '/inteligencia': typeof AppInteligenciaRoute
   '/leads': typeof AppLeadsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/cnae': typeof AppCnaeRoute
   '/crm': typeof AppCrmRoute
   '/dashboard': typeof AppDashboardRoute
+  '/google-maps': typeof AppGoogleMapsRoute
+  '/ia': typeof AppIaRoute
+  '/integracoes': typeof AppIntegracoesRoute
+  '/inteligencia': typeof AppInteligenciaRoute
   '/leads': typeof AppLeadsRoute
 }
 export interface FileRoutesById {
@@ -65,22 +105,52 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
+  '/_app/cnae': typeof AppCnaeRoute
   '/_app/crm': typeof AppCrmRoute
   '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/google-maps': typeof AppGoogleMapsRoute
+  '/_app/ia': typeof AppIaRoute
+  '/_app/integracoes': typeof AppIntegracoesRoute
+  '/_app/inteligencia': typeof AppInteligenciaRoute
   '/_app/leads': typeof AppLeadsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/crm' | '/dashboard' | '/leads'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/cnae'
+    | '/crm'
+    | '/dashboard'
+    | '/google-maps'
+    | '/ia'
+    | '/integracoes'
+    | '/inteligencia'
+    | '/leads'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/crm' | '/dashboard' | '/leads'
+  to:
+    | '/'
+    | '/login'
+    | '/cnae'
+    | '/crm'
+    | '/dashboard'
+    | '/google-maps'
+    | '/ia'
+    | '/integracoes'
+    | '/inteligencia'
+    | '/leads'
   id:
     | '__root__'
     | '/'
     | '/_app'
     | '/login'
+    | '/_app/cnae'
     | '/_app/crm'
     | '/_app/dashboard'
+    | '/_app/google-maps'
+    | '/_app/ia'
+    | '/_app/integracoes'
+    | '/_app/inteligencia'
     | '/_app/leads'
   fileRoutesById: FileRoutesById
 }
@@ -120,6 +190,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppLeadsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/inteligencia': {
+      id: '/_app/inteligencia'
+      path: '/inteligencia'
+      fullPath: '/inteligencia'
+      preLoaderRoute: typeof AppInteligenciaRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/integracoes': {
+      id: '/_app/integracoes'
+      path: '/integracoes'
+      fullPath: '/integracoes'
+      preLoaderRoute: typeof AppIntegracoesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/ia': {
+      id: '/_app/ia'
+      path: '/ia'
+      fullPath: '/ia'
+      preLoaderRoute: typeof AppIaRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/google-maps': {
+      id: '/_app/google-maps'
+      path: '/google-maps'
+      fullPath: '/google-maps'
+      preLoaderRoute: typeof AppGoogleMapsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/dashboard': {
       id: '/_app/dashboard'
       path: '/dashboard'
@@ -134,18 +232,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCrmRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/cnae': {
+      id: '/_app/cnae'
+      path: '/cnae'
+      fullPath: '/cnae'
+      preLoaderRoute: typeof AppCnaeRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
+  AppCnaeRoute: typeof AppCnaeRoute
   AppCrmRoute: typeof AppCrmRoute
   AppDashboardRoute: typeof AppDashboardRoute
+  AppGoogleMapsRoute: typeof AppGoogleMapsRoute
+  AppIaRoute: typeof AppIaRoute
+  AppIntegracoesRoute: typeof AppIntegracoesRoute
+  AppInteligenciaRoute: typeof AppInteligenciaRoute
   AppLeadsRoute: typeof AppLeadsRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppCnaeRoute: AppCnaeRoute,
   AppCrmRoute: AppCrmRoute,
   AppDashboardRoute: AppDashboardRoute,
+  AppGoogleMapsRoute: AppGoogleMapsRoute,
+  AppIaRoute: AppIaRoute,
+  AppIntegracoesRoute: AppIntegracoesRoute,
+  AppInteligenciaRoute: AppInteligenciaRoute,
   AppLeadsRoute: AppLeadsRoute,
 }
 
