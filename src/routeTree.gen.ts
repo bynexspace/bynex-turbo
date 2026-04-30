@@ -12,6 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiApifySearchRouteImport } from './routes/api.apify-search'
+import { Route as ApiAiIntelRouteImport } from './routes/api.ai-intel'
+import { Route as ApiAiChatRouteImport } from './routes/api.ai-chat'
 import { Route as AppTarefasRouteImport } from './routes/_app.tarefas'
 import { Route as AppPlanoRouteImport } from './routes/_app.plano'
 import { Route as AppLinkedinRouteImport } from './routes/_app.linkedin'
@@ -39,6 +42,21 @@ const AppRoute = AppRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiApifySearchRoute = ApiApifySearchRouteImport.update({
+  id: '/api/apify-search',
+  path: '/api/apify-search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAiIntelRoute = ApiAiIntelRouteImport.update({
+  id: '/api/ai-intel',
+  path: '/api/ai-intel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAiChatRoute = ApiAiChatRouteImport.update({
+  id: '/api/ai-chat',
+  path: '/api/ai-chat',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppTarefasRoute = AppTarefasRouteImport.update({
@@ -129,6 +147,9 @@ export interface FileRoutesByFullPath {
   '/linkedin': typeof AppLinkedinRoute
   '/plano': typeof AppPlanoRoute
   '/tarefas': typeof AppTarefasRoute
+  '/api/ai-chat': typeof ApiAiChatRoute
+  '/api/ai-intel': typeof ApiAiIntelRoute
+  '/api/apify-search': typeof ApiApifySearchRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -147,6 +168,9 @@ export interface FileRoutesByTo {
   '/linkedin': typeof AppLinkedinRoute
   '/plano': typeof AppPlanoRoute
   '/tarefas': typeof AppTarefasRoute
+  '/api/ai-chat': typeof ApiAiChatRoute
+  '/api/ai-intel': typeof ApiAiIntelRoute
+  '/api/apify-search': typeof ApiApifySearchRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -167,6 +191,9 @@ export interface FileRoutesById {
   '/_app/linkedin': typeof AppLinkedinRoute
   '/_app/plano': typeof AppPlanoRoute
   '/_app/tarefas': typeof AppTarefasRoute
+  '/api/ai-chat': typeof ApiAiChatRoute
+  '/api/ai-intel': typeof ApiAiIntelRoute
+  '/api/apify-search': typeof ApiApifySearchRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -187,6 +214,9 @@ export interface FileRouteTypes {
     | '/linkedin'
     | '/plano'
     | '/tarefas'
+    | '/api/ai-chat'
+    | '/api/ai-intel'
+    | '/api/apify-search'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -205,6 +235,9 @@ export interface FileRouteTypes {
     | '/linkedin'
     | '/plano'
     | '/tarefas'
+    | '/api/ai-chat'
+    | '/api/ai-intel'
+    | '/api/apify-search'
   id:
     | '__root__'
     | '/'
@@ -224,12 +257,18 @@ export interface FileRouteTypes {
     | '/_app/linkedin'
     | '/_app/plano'
     | '/_app/tarefas'
+    | '/api/ai-chat'
+    | '/api/ai-intel'
+    | '/api/apify-search'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
   LoginRoute: typeof LoginRoute
+  ApiAiChatRoute: typeof ApiAiChatRoute
+  ApiAiIntelRoute: typeof ApiAiIntelRoute
+  ApiApifySearchRoute: typeof ApiApifySearchRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -253,6 +292,27 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/apify-search': {
+      id: '/api/apify-search'
+      path: '/api/apify-search'
+      fullPath: '/api/apify-search'
+      preLoaderRoute: typeof ApiApifySearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/ai-intel': {
+      id: '/api/ai-intel'
+      path: '/api/ai-intel'
+      fullPath: '/api/ai-intel'
+      preLoaderRoute: typeof ApiAiIntelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/ai-chat': {
+      id: '/api/ai-chat'
+      path: '/api/ai-chat'
+      fullPath: '/api/ai-chat'
+      preLoaderRoute: typeof ApiAiChatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app/tarefas': {
@@ -396,6 +456,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   LoginRoute: LoginRoute,
+  ApiAiChatRoute: ApiAiChatRoute,
+  ApiAiIntelRoute: ApiAiIntelRoute,
+  ApiApifySearchRoute: ApiApifySearchRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
