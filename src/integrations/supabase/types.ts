@@ -88,6 +88,21 @@ export type Database = {
           },
         ]
       }
+      app_admins: {
+        Row: {
+          created_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       flows: {
         Row: {
           created_at: string
@@ -461,6 +476,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      is_app_admin: { Args: { _user_id: string }; Returns: boolean }
       is_workspace_member: {
         Args: { _user_id: string; _workspace_id: string }
         Returns: boolean
