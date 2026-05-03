@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import { checkAdmin } from "@/server/admin.functions";
 
 interface WorkspaceCtx {
   id: string;
@@ -13,6 +14,7 @@ interface AuthCtx {
   user: User | null;
   session: Session | null;
   workspace: WorkspaceCtx | null;
+  isAdmin: boolean;
   loading: boolean;
   signOut: () => Promise<void>;
   refreshWorkspace: () => Promise<void>;
@@ -24,6 +26,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [workspace, setWorkspace] = useState<WorkspaceCtx | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const loadWorkspace = async (userId: string) => {
@@ -42,22 +45,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const loadAdmin = async () => {
+    try {
+      const r = await checkAdmin();
+      setIsAdmin(r.isAdmin);
+    } catch {
+      setIsAdmin(false);
+    }
+  };
+
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((_event, sess) => {
       setSession(sess);
       setUser(sess?.user ?? null);
       if (sess?.user) {
-        setTimeout(() => loadWorkspace(sess.user.id), 0);
+        setTimeout(() => {
+          loadWorkspace(sess.user.id);
+          loadAdmin();
+        }, 0);
       } else {
         setWorkspace(null);
+        setIsAdmin(false);
       }
     });
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
-      if (session?.user) loadWorkspace(session.user.id).finally(() => setLoading(false));
-      else setLoading(false);
+      if (session?.user) {
+        Promise.all([loadWorkspace(session.user.id), loadAdmin()]).finally(() => setLoading(false));
+      } else setLoading(false);
     });
 
     return () => sub.subscription.unsubscribe();
@@ -67,7 +84,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const refreshWorkspace = async () => { if (user) await loadWorkspace(user.id); };
 
   return (
-    <Ctx.Provider value={{ user, session, workspace, loading, signOut, refreshWorkspace }}>
+    <Ctx.Provider value={{ user, session, workspace, isAdmin, loading, signOut, refreshWorkspace }}>
       {children}
     </Ctx.Provider>
   );
