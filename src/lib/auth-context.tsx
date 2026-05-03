@@ -73,7 +73,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
-        Promise.all([loadWorkspace(session.user.id), loadAdmin()]).finally(() => setLoading(false));
+        Promise.all([loadWorkspace(session.user.id), loadAdmin(session.user.id)]).finally(() => setLoading(false));
       } else setLoading(false);
     });
 
