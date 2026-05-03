@@ -45,9 +45,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const loadAdmin = async () => {
+  const loadAdmin = async (userId: string) => {
     try {
-      const r = await checkAdmin();
+      const r = await checkAdmin({ data: { userId } });
       setIsAdmin(r.isAdmin);
     } catch {
       setIsAdmin(false);
@@ -61,7 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (sess?.user) {
         setTimeout(() => {
           loadWorkspace(sess.user.id);
-          loadAdmin();
+          loadAdmin(sess.user.id);
         }, 0);
       } else {
         setWorkspace(null);
@@ -73,7 +73,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
-        Promise.all([loadWorkspace(session.user.id), loadAdmin()]).finally(() => setLoading(false));
+        Promise.all([loadWorkspace(session.user.id), loadAdmin(session.user.id)]).finally(() => setLoading(false));
       } else setLoading(false);
     });
 

@@ -1,6 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 async function assertAdmin(userId: string) {
@@ -14,34 +13,39 @@ async function assertAdmin(userId: string) {
 }
 
 /**
- * Auto-seed: se NÃO existe nenhum admin ainda, o primeiro user a chamar isAdmin
- * vira admin automaticamente. Útil pro bootstrap inicial.
+ * Recebe userId explicitamente do client (auth-context já validou a sessão).
+ * Auto-seed: se não há admins ainda, o primeiro user vira admin.
+ * Sempre retorna estrutura previsível — nunca lança.
  */
-export const checkAdmin = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
-    const userId = context.userId;
-    const { count } = await supabaseAdmin
-      .from("app_admins")
-      .select("*", { count: "exact", head: true });
+export const checkAdmin = createServerFn({ method: "POST" })
+  .inputValidator((d) => z.object({ userId: z.string().uuid() }).parse(d))
+  .handler(async ({ data }) => {
+    try {
+      const { count } = await supabaseAdmin
+        .from("app_admins")
+        .select("*", { count: "exact", head: true });
 
-    if ((count ?? 0) === 0) {
-      await supabaseAdmin.from("app_admins").insert({ user_id: userId });
-      return { isAdmin: true, bootstrapped: true };
+      if ((count ?? 0) === 0) {
+        await supabaseAdmin.from("app_admins").insert({ user_id: data.userId });
+        return { isAdmin: true, bootstrapped: true };
+      }
+
+      const { data: row } = await supabaseAdmin
+        .from("app_admins")
+        .select("user_id")
+        .eq("user_id", data.userId)
+        .maybeSingle();
+      return { isAdmin: !!row, bootstrapped: false };
+    } catch (e) {
+      console.error("checkAdmin failed:", e);
+      return { isAdmin: false, bootstrapped: false };
     }
-
-    const { data } = await supabaseAdmin
-      .from("app_admins")
-      .select("user_id")
-      .eq("user_id", userId)
-      .maybeSingle();
-    return { isAdmin: !!data, bootstrapped: false };
   });
 
-export const listAllWorkspaces = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
-    await assertAdmin(context.userId);
+export const listAllWorkspaces = createServerFn({ method: "POST" })
+  .inputValidator((d) => z.object({ userId: z.string().uuid() }).parse(d))
+  .handler(async ({ data }) => {
+    await assertAdmin(data.userId);
     const { data: workspaces } = await supabaseAdmin
       .from("workspaces")
       .select("id, nome, plano, stripe_customer_id, created_at")
@@ -86,17 +90,17 @@ export const listAllWorkspaces = createServerFn({ method: "GET" })
   });
 
 export const updateWorkspacePlan = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
   .inputValidator((d) =>
     z
       .object({
+        userId: z.string().uuid(),
         workspaceId: z.string().uuid(),
         plano: z.enum(["essencial", "pro", "premium"]),
       })
       .parse(d),
   )
-  .handler(async ({ context, data }) => {
-    await assertAdmin(context.userId);
+  .handler(async ({ data }) => {
+    await assertAdmin(data.userId);
     const { error } = await supabaseAdmin
       .from("workspaces")
       .update({ plano: data.plano })
