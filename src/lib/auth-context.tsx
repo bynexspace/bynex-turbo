@@ -45,9 +45,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const loadAdmin = async () => {
+  const loadAdmin = async (userId: string) => {
     try {
-      const r = await checkAdmin();
+      const r = await checkAdmin({ data: { userId } });
       setIsAdmin(r.isAdmin);
     } catch {
       setIsAdmin(false);
