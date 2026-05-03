@@ -7,8 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Send, Loader2, Bot } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { toast } from "sonner";
+import { FeatureGate } from "@/components/FeatureGate";
 
-export const Route = createFileRoute("/_app/ia")({ component: IaPage });
+export const Route = createFileRoute("/_app/ia")({
+  component: () => (<FeatureGate feature="ia" label="Assistente IA"><IaPage /></FeatureGate>),
+});
 
 function IaPage() {
   const [msgs, setMsgs] = useState<{role:"user"|"assistant"; content:string}[]>([
