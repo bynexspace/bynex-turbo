@@ -43,10 +43,10 @@ export const checkAdmin = createServerFn({ method: "POST" })
     }
   });
 
-export const listAllWorkspaces = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
-    await assertAdmin(context.userId);
+export const listAllWorkspaces = createServerFn({ method: "POST" })
+  .inputValidator((d) => z.object({ userId: z.string().uuid() }).parse(d))
+  .handler(async ({ data }) => {
+    await assertAdmin(data.userId);
     const { data: workspaces } = await supabaseAdmin
       .from("workspaces")
       .select("id, nome, plano, stripe_customer_id, created_at")
@@ -91,17 +91,17 @@ export const listAllWorkspaces = createServerFn({ method: "GET" })
   });
 
 export const updateWorkspacePlan = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
   .inputValidator((d) =>
     z
       .object({
+        userId: z.string().uuid(),
         workspaceId: z.string().uuid(),
         plano: z.enum(["essencial", "pro", "premium"]),
       })
       .parse(d),
   )
-  .handler(async ({ context, data }) => {
-    await assertAdmin(context.userId);
+  .handler(async ({ data }) => {
+    await assertAdmin(data.userId);
     const { error } = await supabaseAdmin
       .from("workspaces")
       .update({ plano: data.plano })
