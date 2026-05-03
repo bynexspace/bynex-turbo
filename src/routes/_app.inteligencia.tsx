@@ -11,8 +11,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Loader2, Sparkles } from "lucide-react";
 import { format } from "date-fns";
+import { FeatureGate } from "@/components/FeatureGate";
 
-export const Route = createFileRoute("/_app/inteligencia")({ component: IntelPage });
+export const Route = createFileRoute("/_app/inteligencia")({
+  component: () => (<FeatureGate feature="inteligencia" label="Inteligência Comercial"><IntelPage /></FeatureGate>),
+});
 
 const ESTADOS = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"];
 const DORES = ["Falta de clientes","Gestão financeira","Concorrência","Retenção","Outros"];
