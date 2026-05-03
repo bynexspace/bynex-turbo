@@ -19,6 +19,12 @@ function PlanoPage() {
   const { workspace } = useAuth();
   return (
     <AppLayout title="Plano" subtitle={`Plano atual: ${workspace?.plano || "—"}`}>
+      <Card className="p-4 mb-4 bg-brand/5 border-brand/30">
+        <p className="text-sm">
+          💬 Para ativar ou trocar de plano, entre em contato com nosso time comercial.
+          A ativação é feita manualmente pelo administrador da plataforma.
+        </p>
+      </Card>
       <div className="grid md:grid-cols-3 gap-4">
         {PLANS.map(p => {
           const active = workspace?.plano === p.id;
@@ -30,8 +36,8 @@ function PlanoPage() {
               <ul className="mt-4 space-y-2 text-sm">
                 {p.features.map(f => <li key={f} className="flex items-center gap-2"><Check className="h-4 w-4 text-success" />{f}</li>)}
               </ul>
-              <Button className="w-full mt-6" disabled={active} onClick={() => toast.info("Checkout Stripe em breve")}>
-                {active ? "Plano atual" : "Assinar"}
+              <Button className="w-full mt-6" disabled={active} variant={active ? "outline" : "default"} onClick={() => toast.info("Entre em contato com o suporte para ativar este plano")}>
+                {active ? "Plano atual" : "Solicitar"}
               </Button>
             </Card>
           );
