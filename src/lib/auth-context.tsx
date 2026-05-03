@@ -61,7 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (sess?.user) {
         setTimeout(() => {
           loadWorkspace(sess.user.id);
-          loadAdmin();
+          loadAdmin(sess.user.id);
         }, 0);
       } else {
         setWorkspace(null);
