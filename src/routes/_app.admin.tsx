@@ -15,27 +15,29 @@ export const Route = createFileRoute("/_app/admin")({ component: AdminPage });
 type Plano = "essencial" | "pro" | "premium";
 
 function AdminPage() {
-  const { isAdmin, loading } = useAuth();
+  const { isAdmin, loading, user } = useAuth();
   const [data, setData] = useState<Awaited<ReturnType<typeof listAllWorkspaces>> | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
 
   const load = async () => {
+    if (!user) return;
     try {
-      setData(await listAllWorkspaces());
+      setData(await listAllWorkspaces({ data: { userId: user.id } }));
     } catch (e: any) {
       toast.error(e.message ?? "Falha ao carregar");
     }
   };
 
-  useEffect(() => { if (isAdmin) load(); }, [isAdmin]);
+  useEffect(() => { if (isAdmin && user) load(); }, [isAdmin, user?.id]);
 
   if (loading) return <AppLayout title="Admin"><div className="p-8 text-muted-foreground">Carregando…</div></AppLayout>;
   if (!isAdmin) return <Navigate to="/dashboard" />;
 
   const changePlan = async (workspaceId: string, plano: Plano) => {
+    if (!user) return;
     setBusy(workspaceId);
     try {
-      await updateWorkspacePlan({ data: { workspaceId, plano } });
+      await updateWorkspacePlan({ data: { userId: user.id, workspaceId, plano } });
       toast.success("Plano atualizado");
       await load();
     } catch (e: any) {
