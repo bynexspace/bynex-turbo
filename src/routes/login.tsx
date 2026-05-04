@@ -58,8 +58,8 @@ function LoginPage() {
             <Zap className="h-6 w-6 text-white" fill="white" />
           </div>
           <div>
-            <div className="text-2xl font-bold text-white leading-tight">Turbo</div>
-            <div className="text-xs text-white/60 -mt-1">partners</div>
+            <div className="text-2xl font-bold text-white leading-tight">Bynex</div>
+            <div className="text-xs text-white/60 -mt-1">turbo</div>
           </div>
         </div>
         <Card className="p-6">

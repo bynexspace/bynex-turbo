@@ -38,8 +38,8 @@ export function AppSidebar() {
           <Zap className="h-5 w-5 text-white" fill="white" />
         </div>
         <div>
-          <div className="text-lg font-bold text-white leading-tight">Turbo</div>
-          <div className="text-[11px] text-sidebar-foreground/60 -mt-0.5">partners</div>
+          <div className="text-lg font-bold text-white leading-tight">Bynex</div>
+          <div className="text-[11px] text-sidebar-foreground/60 -mt-0.5">turbo</div>
         </div>
       </div>
 

@@ -25,7 +25,7 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Turbo Prospecção — CRM e geração de leads" },
+      { title: "Bynex Turbo — CRM e geração de leads" },
       { name: "description", content: "Plataforma de CRM e geração de leads para prestadores de serviço local." },
     ],
     links: [{ rel: "stylesheet", href: appCss }],
