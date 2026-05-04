@@ -7,6 +7,7 @@ interface WorkspaceCtx {
   id: string;
   nome: string;
   plano: "essencial" | "pro" | "premium";
+  status: "ativo" | "suspenso";
   role: "owner" | "member";
 }
 
@@ -32,14 +33,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const loadWorkspace = async (userId: string) => {
     const { data } = await supabase
       .from("workspace_members")
-      .select("role, workspaces!inner(id, nome, plano)")
+      .select("role, workspaces!inner(id, nome, plano, status)")
       .eq("user_id", userId)
       .limit(1)
       .maybeSingle();
     if (data) {
       // @ts-ignore - relação join
       const w = data.workspaces;
-      setWorkspace({ id: w.id, nome: w.nome, plano: w.plano, role: data.role });
+      setWorkspace({ id: w.id, nome: w.nome, plano: w.plano, status: w.status, role: data.role });
     } else {
       setWorkspace(null);
     }
