@@ -453,6 +453,7 @@ export type Database = {
           id: string
           nome: string
           plano: Database["public"]["Enums"]["plan_type"]
+          status: Database["public"]["Enums"]["workspace_status"]
           stripe_customer_id: string | null
         }
         Insert: {
@@ -460,6 +461,7 @@ export type Database = {
           id?: string
           nome: string
           plano?: Database["public"]["Enums"]["plan_type"]
+          status?: Database["public"]["Enums"]["workspace_status"]
           stripe_customer_id?: string | null
         }
         Update: {
@@ -467,6 +469,7 @@ export type Database = {
           id?: string
           nome?: string
           plano?: Database["public"]["Enums"]["plan_type"]
+          status?: Database["public"]["Enums"]["workspace_status"]
           stripe_customer_id?: string | null
         }
         Relationships: []
@@ -499,6 +502,7 @@ export type Database = {
       plan_type: "essencial" | "pro" | "premium"
       task_status: "pendente" | "feita" | "adiada"
       task_type: "whatsapp" | "ligacao" | "email"
+      workspace_status: "ativo" | "suspenso"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -639,6 +643,7 @@ export const Constants = {
       plan_type: ["essencial", "pro", "premium"],
       task_status: ["pendente", "feita", "adiada"],
       task_type: ["whatsapp", "ligacao", "email"],
+      workspace_status: ["ativo", "suspenso"],
     },
   },
 } as const
