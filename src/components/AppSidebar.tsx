@@ -2,8 +2,9 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { useState } from "react";
 import {
   LayoutDashboard, MapPin, Search, Linkedin, Kanban, CheckSquare, Users,
-  GitBranch, Bot, Brain, GraduationCap, Plug, CreditCard, Shield, LogOut, Zap, Lock,
+  GitBranch, Bot, Brain, GraduationCap, Plug, CreditCard, Shield, LogOut, Lock,
 } from "lucide-react";
+import bynexMark from "@/assets/bynex-mark.png";
 import { useAuth } from "@/lib/auth-context";
 import { usePlanGate, type Plan } from "@/lib/plan-gate";
 import { UpgradeModal } from "@/components/UpgradeModal";
