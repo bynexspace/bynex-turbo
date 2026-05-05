@@ -1,104 +1,43 @@
-## Sprint de Lançamento — Bynex Turbo
+## Integrar logo oficial da Bynex
 
-Objetivo: permitir que você venda pessoalmente, **crie clientes em 1 clique no /admin**, e tenha controle de **ativar / suspender** acesso. Sem Stripe, sem landing (já existe).
-
----
-
-### 1. Kill switch de acesso (`workspaces.status`)
-
-**DB (migration):**
-- Adicionar enum `workspace_status` com `ativo`, `suspenso`.
-- Adicionar coluna `workspaces.status workspace_status NOT NULL DEFAULT 'ativo'`.
-- Workspaces existentes ficam `ativo` automaticamente.
-
-**App:**
-- `auth-context.tsx`: incluir `status` no tipo `WorkspaceCtx` e no select de `loadWorkspace`.
-- `_app.tsx` (layout autenticado): se `workspace.status === 'suspenso'`, renderizar tela **AccountSuspended** em vez do `<Outlet />`.
-- Nova página `AccountSuspended`: mensagem "Sua conta está aguardando ativação" + botão WhatsApp + botão Sair. Sem sidebar.
+Você enviou o logo (hexágono com "B" + wordmark BYNEX, branco em fundo preto). Vou substituir o ícone genérico de raio (Zap) por esse logo em todos os pontos da marca.
 
 ---
 
-### 2. Criar cliente em 1 clique no /admin
+### O que vai ser feito
 
-**Server function nova** em `src/server/admin.functions.ts`:
-- `createClient({ userId, email, fullName, workspaceName, plano })`
-  - Valida admin via `assertAdmin`.
-  - Usa `supabaseAdmin.auth.admin.createUser` com senha aleatória (12 chars) e `email_confirm: true`.
-  - Insere `workspaces` (nome, plano, status=ativo).
-  - Insere `workspace_members` (user_id, workspace_id, role=owner).
-  - Insere `profiles` (id, email, full_name) — caso o trigger de profile não exista, garante manualmente.
-  - Retorna `{ email, senhaProvisoria, workspaceId }` pra você copiar e mandar pro cliente.
+1. **Salvar o asset**
+   - Copiar `user-uploads://image.png` para `src/assets/bynex-logo.png` (logo completo: símbolo + wordmark).
+   - Gerar/cropar uma versão **só do símbolo** (hexágono+B) para usar como ícone compacto na sidebar e favicon: `src/assets/bynex-mark.png`.
 
-**UI no `/admin`:**
-- Botão "**+ Novo cliente**" no topo da tabela, abre Dialog com: Nome do cliente, E-mail, Nome do workspace, Plano.
-- Após criar, exibe modal com **e-mail + senha provisória + botão copiar** ("Envie esses dados pro cliente").
+2. **Sidebar** (`src/components/AppSidebar.tsx`)
+   - Substituir o bloco `<div bg-brand><Zap/></div> + texto "Bynex/turbo"` por `<img src={bynexMark}/>` + label "turbo" pequeno embaixo (mantendo o ar de produto da família Bynex).
 
----
+3. **Login** (`src/routes/login.tsx`)
+   - Mesmo tratamento: trocar o quadrado com Zap pelo logo. Como o fundo do login é escuro (`bg-sidebar`), o logo branco fica perfeito. Pode usar o logo completo (símbolo + wordmark) já que tem mais espaço.
 
-### 3. Toggle ativar/suspender no /admin
+4. **Tela de conta suspensa** (`src/components/AccountSuspended.tsx`)
+   - Trocar o bloco do topo pelo logo.
 
-- Coluna nova "Status" na tabela com Badge (`ativo` verde / `suspenso` vermelho).
-- Server function `updateWorkspaceStatus({ userId, workspaceId, status })`.
-- Switch ou botão "Suspender" / "Ativar" ao lado do select de plano.
-- Toast de confirmação.
+5. **Favicon** (`public/favicon.ico` + meta no `__root.tsx`)
+   - Substituir favicon pelo símbolo (versão PNG 32x32 e 192x192). Atualizar `links` no `__root.tsx` para apontar pros ícones.
+   - Adicionar `apple-touch-icon` (180x180) usando o símbolo sobre fundo preto.
+
+6. **Open Graph / share image** (`__root.tsx`)
+   - Adicionar `og:image` com o logo completo (1200x630, símbolo centralizado em fundo preto) — `public/og-image.png`. Bom pra quando você compartilhar o link no WhatsApp pros leads.
 
 ---
 
-### 4. Coluna "Último acesso" no /admin
+### Detalhes técnicos
 
-- Em `listAllWorkspaces`, buscar `last_sign_in_at` via `supabaseAdmin.auth.admin.listUsers()` e mapear pelo owner.
-- Mostrar coluna "Último login" formatada (`há X dias` via `date-fns`).
-- Útil pra você saber quem está usando antes de renovar.
+- Geração das variantes (mark recortado, favicon, apple-touch, og-image) via ImageMagick em `code--exec`, usando o PNG enviado como fonte. Tudo gerado em build/scripts e commitado em `public/` e `src/assets/`.
+- Imports do logo em componentes React via `import logo from "@/assets/bynex-logo.png"` (regra do projeto pra src/assets).
+- Remover import de `Zap` dos arquivos onde ele só era usado pra logo (manter onde ainda fizer sentido). 
+- Manter cor de fundo da marca (`bg-brand`) intacta no resto da UI — só os "selos" de logo trocam.
 
----
+### Fora de escopo
+- Não vou mexer na paleta nem no `bg-brand` (azul atual). Se quiser depois alinhar a paleta ao preto/branco do logo, é outra sprint.
+- Não vou criar uma versão SVG vetorial do logo (vou usar o PNG enviado). Se você tiver o SVG, pode mandar depois e eu troco.
 
-### 5. Branding mínimo
-
-- Trocar `<title>` e meta tags em `__root.tsx` (já feito — confirmar).
-- Atualizar favicon (`public/favicon.ico`) — usar placeholder com "B" se não tiver SVG ainda.
-- Logo da sidebar: manter o ícone Zap por enquanto (você pode trocar depois enviando SVG).
-
----
-
-## Detalhes técnicos
-
-**Migration SQL (resumo):**
-```sql
-create type workspace_status as enum ('ativo', 'suspenso');
-alter table workspaces add column status workspace_status not null default 'ativo';
-```
-
-**Tipo atualizado em `WorkspaceCtx`:**
-```ts
-status: 'ativo' | 'suspenso';
-```
-
-**Guard em `_app.tsx`:**
-```tsx
-if (workspace?.status === 'suspenso') return <AccountSuspended />;
-```
-
-**Senha provisória:** gerada via `crypto.randomUUID().slice(0, 12)` — exibida UMA vez no modal e nunca persistida em texto.
-
-**Profile auto-create:** se ainda não existir trigger `on_auth_user_created` que popula `profiles`, o `createClient` insere manualmente após `auth.admin.createUser`.
-
----
-
-## Fora de escopo (fica pra depois)
-- Stripe / cobrança automática
-- Landing page (já existe)
-- Convite de membros pelo cliente
-- Quotas por plano
-- E-mails transacionais com marca
-- LGPD (exportar/excluir conta)
-
----
-
-## Resultado
-Após essa sprint você consegue:
-1. Fechar venda no WhatsApp/pessoalmente.
-2. Ir no `/admin` → "+ Novo cliente" → preencher 4 campos → copiar login + senha → mandar pro cliente.
-3. Quando o cliente parar de pagar → toggle "Suspender" → ele cai na tela de "aguardando ativação".
-4. Acompanhar quem está logando e quanto MRR você tem.
-
-Pronto pra vender.
+### Resultado
+Todas as superfícies de marca (sidebar, login, conta suspensa, aba do navegador, preview de link) passam a exibir o logo oficial da Bynex em vez do ícone genérico.

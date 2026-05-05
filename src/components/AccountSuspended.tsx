@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth-context";
-import { Lock, MessageCircle, LogOut, Zap } from "lucide-react";
+import { Lock, MessageCircle, LogOut } from "lucide-react";
+import bynexLogo from "@/assets/bynex-logo.png";
 
 const WHATSAPP_URL = "https://wa.me/5500000000000?text=Ol%C3%A1%2C%20preciso%20ativar%20minha%20conta%20no%20Bynex%20Turbo";
 
@@ -9,14 +10,8 @@ export function AccountSuspended() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="max-w-md w-full text-center">
-        <div className="flex items-center justify-center gap-2 mb-8">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand">
-            <Zap className="h-5 w-5 text-white" fill="white" />
-          </div>
-          <div className="text-left">
-            <div className="text-lg font-bold leading-tight">Bynex</div>
-            <div className="text-[11px] text-muted-foreground -mt-0.5">turbo</div>
-          </div>
+        <div className="flex items-center justify-center mb-8">
+          <img src={bynexLogo} alt="Bynex Turbo" className="h-24 w-auto object-contain" />
         </div>
 
         <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-brand/15">
