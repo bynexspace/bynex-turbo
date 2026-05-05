@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth-context";
-import { Lock, MessageCircle, LogOut, Zap } from "lucide-react";
+import { Lock, MessageCircle, LogOut } from "lucide-react";
+import bynexLogo from "@/assets/bynex-logo.png";
 
 const WHATSAPP_URL = "https://wa.me/5500000000000?text=Ol%C3%A1%2C%20preciso%20ativar%20minha%20conta%20no%20Bynex%20Turbo";
 
