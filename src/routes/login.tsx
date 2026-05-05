@@ -54,14 +54,8 @@ function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-sidebar p-4">
       <div className="w-full max-w-md">
-        <div className="flex items-center justify-center gap-2 mb-6">
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand">
-            <Zap className="h-6 w-6 text-white" fill="white" />
-          </div>
-          <div>
-            <div className="text-2xl font-bold text-white leading-tight">Bynex</div>
-            <div className="text-xs text-white/60 -mt-1">turbo</div>
-          </div>
+        <div className="flex items-center justify-center mb-8">
+          <img src={bynexLogo} alt="Bynex Turbo" className="h-32 w-auto object-contain" />
         </div>
         <Card className="p-6">
           <h2 className="text-xl font-semibold text-center mb-1">
