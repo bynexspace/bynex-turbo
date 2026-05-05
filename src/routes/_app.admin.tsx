@@ -269,7 +269,7 @@ function CredentialsDialog({
   const [copied, setCopied] = useState(false);
   if (!credentials) return null;
 
-  const text = `Acesso ao Bynex Turbo:\nE-mail: ${credentials.email}\nSenha: ${credentials.senha}`;
+  const text = `Acesso ao BYNEX Turbo:\nE-mail: ${credentials.email}\nSenha: ${credentials.senha}`;
   const copy = async () => {
     await navigator.clipboard.writeText(text);
     setCopied(true);

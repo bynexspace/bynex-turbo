@@ -35,9 +35,9 @@ export function AppSidebar() {
   return (
     <aside className="flex h-screen w-64 flex-col bg-sidebar text-sidebar-foreground sticky top-0">
       <div className="flex items-center gap-2 px-5 py-5 border-b border-white/5">
-        <img src={bynexMark} alt="Bynex" className="h-10 w-10 rounded-lg object-contain" />
+        <img src={bynexMark} alt="BYNEX" className="h-10 w-10 rounded-lg object-contain" />
         <div>
-          <div className="text-lg font-bold text-white leading-tight">Bynex</div>
+          <div className="text-lg font-bold text-white leading-tight">BYNEX</div>
           <div className="text-[11px] text-sidebar-foreground/60 -mt-0.5">turbo</div>
         </div>
       </div>

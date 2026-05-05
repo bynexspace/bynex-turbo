@@ -55,7 +55,7 @@ function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-sidebar p-4">
       <div className="w-full max-w-md">
         <div className="flex items-center justify-center mb-8">
-          <img src={bynexLogo} alt="Bynex Turbo" className="h-32 w-auto object-contain" />
+          <img src={bynexLogo} alt="BYNEX Turbo" className="h-32 w-auto object-contain" />
         </div>
         <Card className="p-6">
           <h2 className="text-xl font-semibold text-center mb-1">
