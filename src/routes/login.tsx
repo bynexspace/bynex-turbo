@@ -7,7 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
-import { Zap, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import bynexLogo from "@/assets/bynex-logo.png";
 
 export const Route = createFileRoute("/login")({ component: LoginPage });
 
