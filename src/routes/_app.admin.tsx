@@ -12,10 +12,10 @@ import {
 } from "@/components/ui/dialog";
 import { useAuth } from "@/lib/auth-context";
 import {
-  listAllWorkspaces, updateWorkspacePlan, updateWorkspaceStatus, createClient,
+  listAllWorkspaces, updateWorkspacePlan, updateWorkspaceStatus, createClient, sendPasswordReset,
 } from "@/server/admin.functions";
 import { toast } from "sonner";
-import { Building2, DollarSign, Users, Database, Plus, Copy, Check, CheckCircle2 } from "lucide-react";
+import { Building2, DollarSign, Users, Database, Plus, Copy, Check, CheckCircle2, KeyRound } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -69,6 +69,21 @@ function AdminPage() {
       await load();
     } catch (e: any) {
       toast.error(e.message ?? "Erro ao alterar status");
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const resetPwd = async (workspaceId: string) => {
+    if (!user) return;
+    setBusy(workspaceId);
+    try {
+      const r = await sendPasswordReset({
+        data: { userId: user.id, workspaceId, redirectTo: `${window.location.origin}/reset-password` },
+      });
+      toast.success(`E-mail de recuperação enviado para ${r.email}`);
+    } catch (e: any) {
+      toast.error(e.message ?? "Erro ao enviar e-mail");
     } finally {
       setBusy(null);
     }
@@ -138,14 +153,25 @@ function AdminPage() {
                   </td>
                   <td className="p-3 text-muted-foreground">{new Date(w.created_at).toLocaleDateString("pt-BR")}</td>
                   <td className="p-3 text-right">
-                    <Button
-                      size="sm"
-                      variant={w.status === "ativo" ? "outline" : "default"}
-                      disabled={busy === w.id}
-                      onClick={() => toggleStatus(w.id, w.status)}
-                    >
-                      {w.status === "ativo" ? "Suspender" : "Ativar"}
-                    </Button>
+                    <div className="flex justify-end gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        disabled={busy === w.id}
+                        onClick={() => resetPwd(w.id)}
+                        title="Enviar e-mail de recuperação"
+                      >
+                        <KeyRound className="h-3.5 w-3.5 mr-1" /> Resetar senha
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant={w.status === "ativo" ? "outline" : "default"}
+                        disabled={busy === w.id}
+                        onClick={() => toggleStatus(w.id, w.status)}
+                      >
+                        {w.status === "ativo" ? "Suspender" : "Ativar"}
+                      </Button>
+                    </div>
                   </td>
                 </tr>
               ))}

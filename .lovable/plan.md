@@ -1,43 +1,46 @@
-## Integrar logo oficial da Bynex
+## Fluxo de recuperação de senha
 
-Você enviou o logo (hexágono com "B" + wordmark BYNEX, branco em fundo preto). Vou substituir o ícone genérico de raio (Zap) por esse logo em todos os pontos da marca.
+Implementar o fluxo padrão "Esqueci minha senha" para que o cliente receba um e-mail com link e defina a própria senha.
 
----
+### 1. Login: link "Esqueci minha senha"
+- Em `src/routes/login.tsx`, adicionar abaixo do campo de senha um link/botão "Esqueci minha senha" que abre um diálogo (ou alterna o formulário) pedindo apenas o e-mail.
+- Ao enviar, chamar:
+  ```ts
+  supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${window.location.origin}/reset-password`
+  })
+  ```
+- Mostrar toast de sucesso ("Se o e-mail existir, enviamos um link de recuperação") sem revelar se a conta existe.
 
-### O que vai ser feito
+### 2. Nova rota pública `/reset-password`
+- Criar `src/routes/reset-password.tsx` (rota pública, fora do `_app`).
+- A página detecta a sessão de recuperação (Supabase processa o token do hash automaticamente via `onAuthStateChange` com evento `PASSWORD_RECOVERY`).
+- Formulário com: nova senha + confirmação. Validação mínima (8+ caracteres, iguais).
+- Submit chama `supabase.auth.updateUser({ password })` e redireciona para `/dashboard` com toast de sucesso.
+- Se acessada sem token válido, mostrar mensagem e botão para voltar ao login.
+- Aplicar a mesma identidade visual BYNEX usada no login (logo, fundo escuro).
 
-1. **Salvar o asset**
-   - Copiar `user-uploads://image.png` para `src/assets/bynex-logo.png` (logo completo: símbolo + wordmark).
-   - Gerar/cropar uma versão **só do símbolo** (hexágono+B) para usar como ícone compacto na sidebar e favicon: `src/assets/bynex-mark.png`.
+### 3. Admin: botão "Enviar link de recuperação"
+- Em `src/routes/_app.admin.tsx`, na coluna de ações de cada workspace, adicionar um botão secundário "Resetar senha" ao lado de Suspender/Ativar.
+- Cria uma nova server function `sendPasswordReset` em `src/server/admin.functions.ts` que:
+  - Valida admin (`assertAdmin`).
+  - Busca o e-mail do owner do workspace.
+  - Usa `supabaseAdmin.auth.admin.generateLink({ type: 'recovery', email, options: { redirectTo: `${origin}/reset-password` } })`.
+  - Como alternativa mais simples (e que dispara o e-mail automaticamente), chamar `supabaseAdmin.auth.resetPasswordForEmail` — mas essa não passa pelo admin client; usaremos `generateLink` e deixaremos o Supabase enviar via SMTP padrão chamando `inviteUserByEmail` não cabe aqui. Solução final: usar o client público com a service key apenas para identificar o e-mail e disparar `resetPasswordForEmail` pelo client browser do admin não é seguro. Então: usar `generateLink({type:'recovery'})` que retorna o link e **dispara o e-mail automaticamente** quando configurado no Supabase.
+- Toast "E-mail de recuperação enviado para {email}".
 
-2. **Sidebar** (`src/components/AppSidebar.tsx`)
-   - Substituir o bloco `<div bg-brand><Zap/></div> + texto "Bynex/turbo"` por `<img src={bynexMark}/>` + label "turbo" pequeno embaixo (mantendo o ar de produto da família Bynex).
-
-3. **Login** (`src/routes/login.tsx`)
-   - Mesmo tratamento: trocar o quadrado com Zap pelo logo. Como o fundo do login é escuro (`bg-sidebar`), o logo branco fica perfeito. Pode usar o logo completo (símbolo + wordmark) já que tem mais espaço.
-
-4. **Tela de conta suspensa** (`src/components/AccountSuspended.tsx`)
-   - Trocar o bloco do topo pelo logo.
-
-5. **Favicon** (`public/favicon.ico` + meta no `__root.tsx`)
-   - Substituir favicon pelo símbolo (versão PNG 32x32 e 192x192). Atualizar `links` no `__root.tsx` para apontar pros ícones.
-   - Adicionar `apple-touch-icon` (180x180) usando o símbolo sobre fundo preto.
-
-6. **Open Graph / share image** (`__root.tsx`)
-   - Adicionar `og:image` com o logo completo (1200x630, símbolo centralizado em fundo preto) — `public/og-image.png`. Bom pra quando você compartilhar o link no WhatsApp pros leads.
-
----
+### 4. Entrega do e-mail
+- O Supabase já envia e-mails de recuperação por padrão usando o SMTP interno (limite baixo, mas funcional para começar com poucos clientes).
+- Não vamos configurar domínio próprio agora — fica como evolução futura quando o volume crescer.
 
 ### Detalhes técnicos
+- Rota `/reset-password` precisa ser pública (não pode estar sob `_app` que exige auth).
+- O listener `onAuthStateChange` na página de reset detecta `PASSWORD_RECOVERY` e habilita o formulário.
+- Após `updateUser`, a sessão fica ativa e o usuário cai no dashboard normalmente.
+- Server function `sendPasswordReset` recebe `{ userId (admin), workspaceId }` e busca o owner internamente.
 
-- Geração das variantes (mark recortado, favicon, apple-touch, og-image) via ImageMagick em `code--exec`, usando o PNG enviado como fonte. Tudo gerado em build/scripts e commitado em `public/` e `src/assets/`.
-- Imports do logo em componentes React via `import logo from "@/assets/bynex-logo.png"` (regra do projeto pra src/assets).
-- Remover import de `Zap` dos arquivos onde ele só era usado pra logo (manter onde ainda fizer sentido). 
-- Manter cor de fundo da marca (`bg-brand`) intacta no resto da UI — só os "selos" de logo trocam.
-
-### Fora de escopo
-- Não vou mexer na paleta nem no `bg-brand` (azul atual). Se quiser depois alinhar a paleta ao preto/branco do logo, é outra sprint.
-- Não vou criar uma versão SVG vetorial do logo (vou usar o PNG enviado). Se você tiver o SVG, pode mandar depois e eu troco.
-
-### Resultado
-Todas as superfícies de marca (sidebar, login, conta suspensa, aba do navegador, preview de link) passam a exibir o logo oficial da Bynex em vez do ícone genérico.
+### Arquivos afetados
+- `src/routes/login.tsx` — adicionar UI de "Esqueci minha senha"
+- `src/routes/reset-password.tsx` — **novo**
+- `src/routes/_app.admin.tsx` — botão "Resetar senha" na tabela
+- `src/server/admin.functions.ts` — nova função `sendPasswordReset`

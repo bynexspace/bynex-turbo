@@ -20,6 +20,26 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
+  const [forgotBusy, setForgotBusy] = useState(false);
+
+  const sendReset = async () => {
+    if (!email) {
+      toast.error("Digite seu e-mail acima primeiro");
+      return;
+    }
+    setForgotBusy(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (error) throw error;
+      toast.success("Se o e-mail existir, enviamos um link de recuperação.");
+    } catch (err: any) {
+      toast.error(err.message ?? "Erro ao enviar e-mail");
+    } finally {
+      setForgotBusy(false);
+    }
+  };
 
   useEffect(() => {
     if (user) nav({ to: "/dashboard" });
@@ -76,7 +96,19 @@ function LoginPage() {
               <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
             </div>
             <div>
-              <Label>Senha</Label>
+              <div className="flex items-center justify-between">
+                <Label>Senha</Label>
+                {mode === "login" && (
+                  <button
+                    type="button"
+                    onClick={sendReset}
+                    disabled={forgotBusy}
+                    className="text-xs text-brand hover:underline disabled:opacity-50"
+                  >
+                    {forgotBusy ? "Enviando…" : "Esqueci minha senha"}
+                  </button>
+                )}
+              </div>
               <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
             </div>
             <Button type="submit" disabled={busy} className="w-full">
