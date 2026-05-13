@@ -170,11 +170,9 @@ export const sendPasswordReset = createServerFn({ method: "POST" })
     const email = (member as any)?.profiles?.email;
     if (!email) throw new Error("Owner do workspace não encontrado");
 
-    // generateLink dispara o e-mail automaticamente via SMTP do Supabase
-    const { error } = await supabaseAdmin.auth.admin.generateLink({
-      type: "recovery",
-      email,
-      options: { redirectTo: data.redirectTo },
+    // resetPasswordForEmail dispara o e-mail via SMTP do Supabase
+    const { error } = await supabaseAdmin.auth.resetPasswordForEmail(email, {
+      redirectTo: data.redirectTo,
     });
     if (error) throw new Error(error.message);
 
