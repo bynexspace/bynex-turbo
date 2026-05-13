@@ -74,6 +74,21 @@ function AdminPage() {
     }
   };
 
+  const resetPwd = async (workspaceId: string) => {
+    if (!user) return;
+    setBusy(workspaceId);
+    try {
+      const r = await sendPasswordReset({
+        data: { userId: user.id, workspaceId, redirectTo: `${window.location.origin}/reset-password` },
+      });
+      toast.success(`E-mail de recuperação enviado para ${r.email}`);
+    } catch (e: any) {
+      toast.error(e.message ?? "Erro ao enviar e-mail");
+    } finally {
+      setBusy(null);
+    }
+  };
+
   const k = data?.kpis;
 
   return (
