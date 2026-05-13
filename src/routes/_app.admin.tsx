@@ -12,10 +12,10 @@ import {
 } from "@/components/ui/dialog";
 import { useAuth } from "@/lib/auth-context";
 import {
-  listAllWorkspaces, updateWorkspacePlan, updateWorkspaceStatus, createClient,
+  listAllWorkspaces, updateWorkspacePlan, updateWorkspaceStatus, createClient, sendPasswordReset,
 } from "@/server/admin.functions";
 import { toast } from "sonner";
-import { Building2, DollarSign, Users, Database, Plus, Copy, Check, CheckCircle2 } from "lucide-react";
+import { Building2, DollarSign, Users, Database, Plus, Copy, Check, CheckCircle2, KeyRound } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
