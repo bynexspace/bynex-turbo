@@ -153,14 +153,25 @@ function AdminPage() {
                   </td>
                   <td className="p-3 text-muted-foreground">{new Date(w.created_at).toLocaleDateString("pt-BR")}</td>
                   <td className="p-3 text-right">
-                    <Button
-                      size="sm"
-                      variant={w.status === "ativo" ? "outline" : "default"}
-                      disabled={busy === w.id}
-                      onClick={() => toggleStatus(w.id, w.status)}
-                    >
-                      {w.status === "ativo" ? "Suspender" : "Ativar"}
-                    </Button>
+                    <div className="flex justify-end gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        disabled={busy === w.id}
+                        onClick={() => resetPwd(w.id)}
+                        title="Enviar e-mail de recuperação"
+                      >
+                        <KeyRound className="h-3.5 w-3.5 mr-1" /> Resetar senha
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant={w.status === "ativo" ? "outline" : "default"}
+                        disabled={busy === w.id}
+                        onClick={() => toggleStatus(w.id, w.status)}
+                      >
+                        {w.status === "ativo" ? "Suspender" : "Ativar"}
+                      </Button>
+                    </div>
                   </td>
                 </tr>
               ))}
