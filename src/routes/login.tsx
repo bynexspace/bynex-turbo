@@ -20,6 +20,26 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
+  const [forgotBusy, setForgotBusy] = useState(false);
+
+  const sendReset = async () => {
+    if (!email) {
+      toast.error("Digite seu e-mail acima primeiro");
+      return;
+    }
+    setForgotBusy(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (error) throw error;
+      toast.success("Se o e-mail existir, enviamos um link de recuperação.");
+    } catch (err: any) {
+      toast.error(err.message ?? "Erro ao enviar e-mail");
+    } finally {
+      setForgotBusy(false);
+    }
+  };
 
   useEffect(() => {
     if (user) nav({ to: "/dashboard" });
