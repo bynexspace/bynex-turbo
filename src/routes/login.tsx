@@ -96,7 +96,19 @@ function LoginPage() {
               <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
             </div>
             <div>
-              <Label>Senha</Label>
+              <div className="flex items-center justify-between">
+                <Label>Senha</Label>
+                {mode === "login" && (
+                  <button
+                    type="button"
+                    onClick={sendReset}
+                    disabled={forgotBusy}
+                    className="text-xs text-brand hover:underline disabled:opacity-50"
+                  >
+                    {forgotBusy ? "Enviando…" : "Esqueci minha senha"}
+                  </button>
+                )}
+              </div>
               <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
             </div>
             <Button type="submit" disabled={busy} className="w-full">
