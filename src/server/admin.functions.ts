@@ -145,6 +145,42 @@ export const updateWorkspaceStatus = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+export const sendPasswordReset = createServerFn({ method: "POST" })
+  .inputValidator((d) =>
+    z
+      .object({
+        userId: z.string().uuid(),
+        workspaceId: z.string().uuid(),
+        redirectTo: z.string().url(),
+      })
+      .parse(d),
+  )
+  .handler(async ({ data }) => {
+    await assertAdmin(data.userId);
+
+    // Buscar o owner do workspace
+    const { data: member } = await supabaseAdmin
+      .from("workspace_members")
+      .select("user_id, profiles!inner(email)")
+      .eq("workspace_id", data.workspaceId)
+      .eq("role", "owner")
+      .limit(1)
+      .maybeSingle();
+
+    const email = (member as any)?.profiles?.email;
+    if (!email) throw new Error("Owner do workspace não encontrado");
+
+    // generateLink dispara o e-mail automaticamente via SMTP do Supabase
+    const { error } = await supabaseAdmin.auth.admin.generateLink({
+      type: "recovery",
+      email,
+      options: { redirectTo: data.redirectTo },
+    });
+    if (error) throw new Error(error.message);
+
+    return { ok: true, email };
+  });
+
 function genPassword(len = 12) {
   const chars = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   let out = "";
