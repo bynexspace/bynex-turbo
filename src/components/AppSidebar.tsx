@@ -21,6 +21,7 @@ const items: { to: string; icon: any; label: string; feature: string }[] = [
   { to: "/flows", icon: GitBranch, label: "Flows", feature: "flows" },
   { to: "/ia", icon: Bot, label: "Assistente IA", feature: "ia" },
   { to: "/inteligencia", icon: Brain, label: "Inteligência Comercial", feature: "inteligencia" },
+  { to: "/campanhas", icon: Mail, label: "Email Marketing", feature: "email-marketing" },
   { to: "/educacao", icon: GraduationCap, label: "Educação", feature: "educacao" },
   { to: "/integracoes", icon: Plug, label: "Integrações", feature: "integracoes" },
   { to: "/plano", icon: CreditCard, label: "Plano", feature: "plano" },
