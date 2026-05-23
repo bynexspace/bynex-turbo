@@ -647,18 +647,22 @@ async function dispatchCampaign(campaign: any, budget: number): Promise<number> 
 
   let sentCount = 0;
   for (const s of pending ?? []) {
-    const { data: lead } = await supabaseAdmin
-      .from("leads")
-      .select("nome, email, telefone, cidade, estado, metadata")
-      .eq("id", s.lead_id)
-      .maybeSingle();
+    const lead = s.lead_id
+      ? (
+          await supabaseAdmin
+            .from("leads")
+            .select("nome, email, telefone, cidade, estado, metadata")
+            .eq("id", s.lead_id)
+            .maybeSingle()
+        ).data
+      : null;
     const vars = {
       nome: lead?.nome ?? "",
-      email: lead?.email ?? "",
+      email: lead?.email ?? s.recipient_email,
       telefone: lead?.telefone ?? "",
       cidade: lead?.cidade ?? "",
       estado: lead?.estado ?? "",
-      ...(lead?.metadata as any ?? {}),
+      ...((lead?.metadata as any) ?? {}),
     };
     const subject = renderTemplate(template.assunto, vars);
     let html = renderTemplate(template.html, vars);
