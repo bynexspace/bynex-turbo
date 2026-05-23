@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
@@ -29,8 +30,16 @@ import { Route as AppEducacaoRouteImport } from './routes/_app.educacao'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppCrmRouteImport } from './routes/_app.crm'
 import { Route as AppCnaeRouteImport } from './routes/_app.cnae'
+import { Route as AppCampanhasRouteImport } from './routes/_app.campanhas'
 import { Route as AppAdminRouteImport } from './routes/_app.admin'
+import { Route as ApiPublicHooksProcessEmailCampaignsRouteImport } from './routes/api/public/hooks/process-email-campaigns'
+import { Route as ApiPublicHooksBrevoEventsRouteImport } from './routes/api/public/hooks/brevo-events'
 
+const UnsubscribeRoute = UnsubscribeRouteImport.update({
+  id: '/unsubscribe',
+  path: '/unsubscribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
@@ -130,17 +139,36 @@ const AppCnaeRoute = AppCnaeRouteImport.update({
   path: '/cnae',
   getParentRoute: () => AppRoute,
 } as any)
+const AppCampanhasRoute = AppCampanhasRouteImport.update({
+  id: '/campanhas',
+  path: '/campanhas',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppAdminRoute = AppAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
   getParentRoute: () => AppRoute,
 } as any)
+const ApiPublicHooksProcessEmailCampaignsRoute =
+  ApiPublicHooksProcessEmailCampaignsRouteImport.update({
+    id: '/api/public/hooks/process-email-campaigns',
+    path: '/api/public/hooks/process-email-campaigns',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicHooksBrevoEventsRoute =
+  ApiPublicHooksBrevoEventsRouteImport.update({
+    id: '/api/public/hooks/brevo-events',
+    path: '/api/public/hooks/brevo-events',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/unsubscribe': typeof UnsubscribeRoute
   '/admin': typeof AppAdminRoute
+  '/campanhas': typeof AppCampanhasRoute
   '/cnae': typeof AppCnaeRoute
   '/crm': typeof AppCrmRoute
   '/dashboard': typeof AppDashboardRoute
@@ -157,12 +185,16 @@ export interface FileRoutesByFullPath {
   '/api/ai-chat': typeof ApiAiChatRoute
   '/api/ai-intel': typeof ApiAiIntelRoute
   '/api/apify-search': typeof ApiApifySearchRoute
+  '/api/public/hooks/brevo-events': typeof ApiPublicHooksBrevoEventsRoute
+  '/api/public/hooks/process-email-campaigns': typeof ApiPublicHooksProcessEmailCampaignsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/unsubscribe': typeof UnsubscribeRoute
   '/admin': typeof AppAdminRoute
+  '/campanhas': typeof AppCampanhasRoute
   '/cnae': typeof AppCnaeRoute
   '/crm': typeof AppCrmRoute
   '/dashboard': typeof AppDashboardRoute
@@ -179,6 +211,8 @@ export interface FileRoutesByTo {
   '/api/ai-chat': typeof ApiAiChatRoute
   '/api/ai-intel': typeof ApiAiIntelRoute
   '/api/apify-search': typeof ApiApifySearchRoute
+  '/api/public/hooks/brevo-events': typeof ApiPublicHooksBrevoEventsRoute
+  '/api/public/hooks/process-email-campaigns': typeof ApiPublicHooksProcessEmailCampaignsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -186,7 +220,9 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/unsubscribe': typeof UnsubscribeRoute
   '/_app/admin': typeof AppAdminRoute
+  '/_app/campanhas': typeof AppCampanhasRoute
   '/_app/cnae': typeof AppCnaeRoute
   '/_app/crm': typeof AppCrmRoute
   '/_app/dashboard': typeof AppDashboardRoute
@@ -203,6 +239,8 @@ export interface FileRoutesById {
   '/api/ai-chat': typeof ApiAiChatRoute
   '/api/ai-intel': typeof ApiAiIntelRoute
   '/api/apify-search': typeof ApiApifySearchRoute
+  '/api/public/hooks/brevo-events': typeof ApiPublicHooksBrevoEventsRoute
+  '/api/public/hooks/process-email-campaigns': typeof ApiPublicHooksProcessEmailCampaignsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -210,7 +248,9 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/reset-password'
+    | '/unsubscribe'
     | '/admin'
+    | '/campanhas'
     | '/cnae'
     | '/crm'
     | '/dashboard'
@@ -227,12 +267,16 @@ export interface FileRouteTypes {
     | '/api/ai-chat'
     | '/api/ai-intel'
     | '/api/apify-search'
+    | '/api/public/hooks/brevo-events'
+    | '/api/public/hooks/process-email-campaigns'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
     | '/reset-password'
+    | '/unsubscribe'
     | '/admin'
+    | '/campanhas'
     | '/cnae'
     | '/crm'
     | '/dashboard'
@@ -249,13 +293,17 @@ export interface FileRouteTypes {
     | '/api/ai-chat'
     | '/api/ai-intel'
     | '/api/apify-search'
+    | '/api/public/hooks/brevo-events'
+    | '/api/public/hooks/process-email-campaigns'
   id:
     | '__root__'
     | '/'
     | '/_app'
     | '/login'
     | '/reset-password'
+    | '/unsubscribe'
     | '/_app/admin'
+    | '/_app/campanhas'
     | '/_app/cnae'
     | '/_app/crm'
     | '/_app/dashboard'
@@ -272,6 +320,8 @@ export interface FileRouteTypes {
     | '/api/ai-chat'
     | '/api/ai-intel'
     | '/api/apify-search'
+    | '/api/public/hooks/brevo-events'
+    | '/api/public/hooks/process-email-campaigns'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -279,13 +329,23 @@ export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   LoginRoute: typeof LoginRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  UnsubscribeRoute: typeof UnsubscribeRoute
   ApiAiChatRoute: typeof ApiAiChatRoute
   ApiAiIntelRoute: typeof ApiAiIntelRoute
   ApiApifySearchRoute: typeof ApiApifySearchRoute
+  ApiPublicHooksBrevoEventsRoute: typeof ApiPublicHooksBrevoEventsRoute
+  ApiPublicHooksProcessEmailCampaignsRoute: typeof ApiPublicHooksProcessEmailCampaignsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/unsubscribe': {
+      id: '/unsubscribe'
+      path: '/unsubscribe'
+      fullPath: '/unsubscribe'
+      preLoaderRoute: typeof UnsubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reset-password': {
       id: '/reset-password'
       path: '/reset-password'
@@ -426,6 +486,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCnaeRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/campanhas': {
+      id: '/_app/campanhas'
+      path: '/campanhas'
+      fullPath: '/campanhas'
+      preLoaderRoute: typeof AppCampanhasRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/admin': {
       id: '/_app/admin'
       path: '/admin'
@@ -433,11 +500,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAdminRouteImport
       parentRoute: typeof AppRoute
     }
+    '/api/public/hooks/process-email-campaigns': {
+      id: '/api/public/hooks/process-email-campaigns'
+      path: '/api/public/hooks/process-email-campaigns'
+      fullPath: '/api/public/hooks/process-email-campaigns'
+      preLoaderRoute: typeof ApiPublicHooksProcessEmailCampaignsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/hooks/brevo-events': {
+      id: '/api/public/hooks/brevo-events'
+      path: '/api/public/hooks/brevo-events'
+      fullPath: '/api/public/hooks/brevo-events'
+      preLoaderRoute: typeof ApiPublicHooksBrevoEventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 interface AppRouteChildren {
   AppAdminRoute: typeof AppAdminRoute
+  AppCampanhasRoute: typeof AppCampanhasRoute
   AppCnaeRoute: typeof AppCnaeRoute
   AppCrmRoute: typeof AppCrmRoute
   AppDashboardRoute: typeof AppDashboardRoute
@@ -455,6 +537,7 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppAdminRoute: AppAdminRoute,
+  AppCampanhasRoute: AppCampanhasRoute,
   AppCnaeRoute: AppCnaeRoute,
   AppCrmRoute: AppCrmRoute,
   AppDashboardRoute: AppDashboardRoute,
@@ -477,9 +560,13 @@ const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   LoginRoute: LoginRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  UnsubscribeRoute: UnsubscribeRoute,
   ApiAiChatRoute: ApiAiChatRoute,
   ApiAiIntelRoute: ApiAiIntelRoute,
   ApiApifySearchRoute: ApiApifySearchRoute,
+  ApiPublicHooksBrevoEventsRoute: ApiPublicHooksBrevoEventsRoute,
+  ApiPublicHooksProcessEmailCampaignsRoute:
+    ApiPublicHooksProcessEmailCampaignsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
