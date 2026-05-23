@@ -18,6 +18,7 @@ export const FEATURE_REQUIREMENTS: Record<string, Plan> = {
   inteligencia: "pro",
   "agente-sdr": "pro",
   linkedin: "premium",
+  "email-marketing": "premium",
 };
 
 const RANK: Record<Plan, number> = { essencial: 0, pro: 1, premium: 2 };
