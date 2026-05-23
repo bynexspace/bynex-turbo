@@ -668,7 +668,8 @@ async function dispatchCampaign(campaign: any, budget: number): Promise<number> 
       _workspace_id: campaign.workspace_id,
       _email: s.recipient_email,
     });
-    const unsubUrl = `${APP_ORIGIN}/unsubscribe?token=${tokenRow}`;
+    const token = (tokenRow as string | null) ?? "";
+    const unsubUrl = `${APP_ORIGIN}/unsubscribe?token=${token}`;
     html = appendUnsubscribeFooter(html, unsubUrl);
 
     try {
