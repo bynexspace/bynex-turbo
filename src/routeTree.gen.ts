@@ -30,6 +30,7 @@ import { Route as AppEducacaoRouteImport } from './routes/_app.educacao'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppCrmRouteImport } from './routes/_app.crm'
 import { Route as AppCnaeRouteImport } from './routes/_app.cnae'
+import { Route as AppCampanhasRouteImport } from './routes/_app.campanhas'
 import { Route as AppAdminRouteImport } from './routes/_app.admin'
 import { Route as ApiPublicHooksProcessEmailCampaignsRouteImport } from './routes/api/public/hooks/process-email-campaigns'
 import { Route as ApiPublicHooksBrevoEventsRouteImport } from './routes/api/public/hooks/brevo-events'
@@ -138,6 +139,11 @@ const AppCnaeRoute = AppCnaeRouteImport.update({
   path: '/cnae',
   getParentRoute: () => AppRoute,
 } as any)
+const AppCampanhasRoute = AppCampanhasRouteImport.update({
+  id: '/campanhas',
+  path: '/campanhas',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppAdminRoute = AppAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -162,6 +168,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/admin': typeof AppAdminRoute
+  '/campanhas': typeof AppCampanhasRoute
   '/cnae': typeof AppCnaeRoute
   '/crm': typeof AppCrmRoute
   '/dashboard': typeof AppDashboardRoute
@@ -187,6 +194,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/admin': typeof AppAdminRoute
+  '/campanhas': typeof AppCampanhasRoute
   '/cnae': typeof AppCnaeRoute
   '/crm': typeof AppCrmRoute
   '/dashboard': typeof AppDashboardRoute
@@ -214,6 +222,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/_app/admin': typeof AppAdminRoute
+  '/_app/campanhas': typeof AppCampanhasRoute
   '/_app/cnae': typeof AppCnaeRoute
   '/_app/crm': typeof AppCrmRoute
   '/_app/dashboard': typeof AppDashboardRoute
@@ -241,6 +250,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/unsubscribe'
     | '/admin'
+    | '/campanhas'
     | '/cnae'
     | '/crm'
     | '/dashboard'
@@ -266,6 +276,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/unsubscribe'
     | '/admin'
+    | '/campanhas'
     | '/cnae'
     | '/crm'
     | '/dashboard'
@@ -292,6 +303,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/unsubscribe'
     | '/_app/admin'
+    | '/_app/campanhas'
     | '/_app/cnae'
     | '/_app/crm'
     | '/_app/dashboard'
@@ -474,6 +486,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCnaeRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/campanhas': {
+      id: '/_app/campanhas'
+      path: '/campanhas'
+      fullPath: '/campanhas'
+      preLoaderRoute: typeof AppCampanhasRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/admin': {
       id: '/_app/admin'
       path: '/admin'
@@ -500,6 +519,7 @@ declare module '@tanstack/react-router' {
 
 interface AppRouteChildren {
   AppAdminRoute: typeof AppAdminRoute
+  AppCampanhasRoute: typeof AppCampanhasRoute
   AppCnaeRoute: typeof AppCnaeRoute
   AppCrmRoute: typeof AppCrmRoute
   AppDashboardRoute: typeof AppDashboardRoute
@@ -517,6 +537,7 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppAdminRoute: AppAdminRoute,
+  AppCampanhasRoute: AppCampanhasRoute,
   AppCnaeRoute: AppCnaeRoute,
   AppCrmRoute: AppCrmRoute,
   AppDashboardRoute: AppDashboardRoute,
