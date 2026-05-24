@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
+import { authedFetch } from "@/lib/api-auth";
 import { toast } from "sonner";
 import { Plus, X, Search, Loader2 } from "lucide-react";
 
@@ -45,18 +46,11 @@ function CnaePage() {
     if (selectedCnaes.length === 0) { toast.error("Selecione ao menos um CNAE"); return; }
     setBusy(true);
     try {
-      const { data: integ } = await supabase.from("integrations").select("cnpja_key").eq("workspace_id", workspace.id).maybeSingle();
-      const apiKey = (integ as any)?.cnpja_key;
-      if (!apiKey) {
-        toast.error("Configure sua API key CNPJá em Integrações");
-        setBusy(false);
-        return;
-      }
-      const res = await fetch("/api/cnpja-search", {
+      const res = await authedFetch("/api/cnpja-search", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          apiKey, cnaes: selectedCnaes, uf, municipio,
+          workspaceId: workspace.id,
+          cnaes: selectedCnaes, uf, municipio,
           capitalMin: capitalMin ? Number(capitalMin) : undefined,
           capitalMax: capitalMax ? Number(capitalMax) : undefined,
           somenteMatriz, comEmail, comTelefone, limit: 20,

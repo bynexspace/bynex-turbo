@@ -37,8 +37,8 @@ function GMapsPage() {
     if (!query.trim()) return toast.error("Informe o que procurar");
     setBusy(true);
     try {
-      const res = await fetch("/api/apify-search", {
-        method: "POST", headers: { "Content-Type": "application/json" },
+      const res = await authedFetch("/api/apify-search", {
+        method: "POST",
         body: JSON.stringify({
           workspaceId: workspace!.id,
           query, qty: Number(qty), estado, cidade, bairro,

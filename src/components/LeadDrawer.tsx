@@ -67,9 +67,8 @@ export function LeadDrawer({ lead, onClose, onUpdated }: Props) {
     setAiBusy(true);
     try {
       const ctx = `Lead: ${edit.nome}; telefone: ${edit.telefone || "—"}; cidade: ${edit.cidade || "—"}/${edit.estado || "—"}; status: ${edit.status}; origem: ${edit.origem}.`;
-      const res = await fetch("/api/ai-chat", {
+      const res = await authedFetch("/api/ai-chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           system: `Você é um SDR sênior de vendas B2B local no Brasil trabalhando este lead específico. Contexto do lead: ${ctx} Personalize abordagens usando o nome da empresa e a cidade quando relevante.`,
           messages: newMsgs,
