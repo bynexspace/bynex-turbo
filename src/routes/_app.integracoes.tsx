@@ -15,31 +15,37 @@ export const Route = createFileRoute("/_app/integracoes")({ component: Integraco
 
 function IntegracoesPage() {
   const { workspace } = useAuth();
-  const [key, setKey] = useState("");
-  const [saved, setSaved] = useState(false);
-  const [busy, setBusy] = useState(false);
+  const [apify, setApify] = useState("");
+  const [apifySaved, setApifySaved] = useState(false);
+  const [cnpja, setCnpja] = useState("");
+  const [cnpjaSaved, setCnpjaSaved] = useState(false);
+  const [busy, setBusy] = useState<string | null>(null);
 
   useEffect(() => {
     if (!workspace) return;
-    supabase.from("integrations").select("apify_key").eq("workspace_id", workspace.id).maybeSingle()
+    supabase.from("integrations").select("apify_key, cnpja_key").eq("workspace_id", workspace.id).maybeSingle()
       .then(({ data }) => {
-        if (data?.apify_key) { setKey(data.apify_key); setSaved(true); }
+        if (data?.apify_key) { setApify(data.apify_key); setApifySaved(true); }
+        if ((data as any)?.cnpja_key) { setCnpja((data as any).cnpja_key); setCnpjaSaved(true); }
       });
   }, [workspace]);
 
-  const save = async () => {
-    setBusy(true);
+  const saveField = async (field: "apify_key" | "cnpja_key", value: string, kind: string) => {
+    setBusy(kind);
     const { error } = await supabase.from("integrations").upsert({
-      workspace_id: workspace!.id, apify_key: key,
-    }, { onConflict: "workspace_id" });
-    setBusy(false);
-    if (error) toast.error("Erro ao salvar"); else { toast.success("Salvo!"); setSaved(true); }
+      workspace_id: workspace!.id, [field]: value,
+    } as any, { onConflict: "workspace_id" });
+    setBusy(null);
+    if (error) toast.error("Erro ao salvar");
+    else { toast.success("Salvo!"); if (field === "apify_key") setApifySaved(true); else setCnpjaSaved(true); }
   };
 
-  const remove = async () => {
-    setBusy(true);
-    await supabase.from("integrations").update({ apify_key: null }).eq("workspace_id", workspace!.id);
-    setBusy(false); setKey(""); setSaved(false); toast.success("Removido");
+  const removeField = async (field: "apify_key" | "cnpja_key", kind: string) => {
+    setBusy(kind);
+    await supabase.from("integrations").update({ [field]: null } as any).eq("workspace_id", workspace!.id);
+    setBusy(null);
+    if (field === "apify_key") { setApify(""); setApifySaved(false); } else { setCnpja(""); setCnpjaSaved(false); }
+    toast.success("Removido");
   };
 
   return (
@@ -48,7 +54,7 @@ function IntegracoesPage() {
         <Card className="p-5">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${saved ? "bg-success/15 text-success" : "bg-muted text-muted-foreground"}`}>
+              <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${apifySaved ? "bg-success/15 text-success" : "bg-muted text-muted-foreground"}`}>
                 <Plug className="h-5 w-5" />
               </div>
               <div>
@@ -56,40 +62,55 @@ function IntegracoesPage() {
                 <div className="text-xs text-muted-foreground">Google Maps Scraper</div>
               </div>
             </div>
-            <Badge className={saved ? "bg-success/15 text-success" : "bg-muted text-muted-foreground"}>
-              {saved ? <><Check className="h-3 w-3 mr-1" />Conectado</> : "Desconectado"}
+            <Badge className={apifySaved ? "bg-success/15 text-success" : "bg-muted text-muted-foreground"}>
+              {apifySaved ? <><Check className="h-3 w-3 mr-1" />Conectado</> : "Desconectado"}
             </Badge>
           </div>
-          <p className="text-xs text-muted-foreground mb-3">
-            Custo aproximado: $0.004 por lead retornado.
-          </p>
+          <p className="text-xs text-muted-foreground mb-3">Custo aproximado: $0.004 por lead retornado.</p>
           <Label>API Token</Label>
-          <Input type="password" value={key} onChange={e => setKey(e.target.value)} placeholder="apify_api_..." />
+          <Input type="password" value={apify} onChange={e => setApify(e.target.value)} placeholder="apify_api_..." />
           <div className="flex gap-2 mt-3">
-            <Button onClick={save} disabled={busy || !key}>
-              {busy && <Loader2 className="h-4 w-4 animate-spin mr-2" />}Salvar
+            <Button onClick={() => saveField("apify_key", apify, "apify")} disabled={busy==="apify" || !apify}>
+              {busy==="apify" && <Loader2 className="h-4 w-4 animate-spin mr-2" />}Salvar
             </Button>
-            {saved && <Button variant="destructive" onClick={remove}><X className="h-4 w-4 mr-1" />Remover</Button>}
+            {apifySaved && <Button variant="destructive" onClick={() => removeField("apify_key", "apify")}><X className="h-4 w-4 mr-1" />Remover</Button>}
           </div>
           <ol className="text-xs text-muted-foreground mt-4 space-y-1 list-decimal pl-4">
             <li>Crie conta em apify.com</li>
-            <li>Acesse Settings → Integrations</li>
-            <li>Copie sua API Token</li>
+            <li>Settings → Integrations → API Token</li>
             <li>Cole aqui e salve</li>
           </ol>
         </Card>
 
         <Card className="p-5">
           <div className="flex items-center justify-between mb-3">
-            <div>
-              <div className="font-semibold">Busca CNAE</div>
-              <div className="text-xs text-muted-foreground">Receita Federal · BrasilAPI</div>
+            <div className="flex items-center gap-2">
+              <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${cnpjaSaved ? "bg-success/15 text-success" : "bg-muted text-muted-foreground"}`}>
+                <Plug className="h-5 w-5" />
+              </div>
+              <div>
+                <div className="font-semibold">CNPJá</div>
+                <div className="text-xs text-muted-foreground">Busca CNAE · Receita Federal</div>
+              </div>
             </div>
-            <Badge className="bg-brand/15 text-brand">Incluída no Plano</Badge>
+            <Badge className={cnpjaSaved ? "bg-success/15 text-success" : "bg-muted text-muted-foreground"}>
+              {cnpjaSaved ? <><Check className="h-3 w-3 mr-1" />Conectado</> : "Desconectado"}
+            </Badge>
           </div>
-          <p className="text-sm text-muted-foreground">
-            Já vem inclusa com 1.000 créditos mensais. Sem configuração necessária.
-          </p>
+          <p className="text-xs text-muted-foreground mb-3">Plano gratuito: 1.000 consultas/mês. Plano pago a partir de R$ 29/mês.</p>
+          <Label>API Token</Label>
+          <Input type="password" value={cnpja} onChange={e => setCnpja(e.target.value)} placeholder="cnpja_..." />
+          <div className="flex gap-2 mt-3">
+            <Button onClick={() => saveField("cnpja_key", cnpja, "cnpja")} disabled={busy==="cnpja" || !cnpja}>
+              {busy==="cnpja" && <Loader2 className="h-4 w-4 animate-spin mr-2" />}Salvar
+            </Button>
+            {cnpjaSaved && <Button variant="destructive" onClick={() => removeField("cnpja_key", "cnpja")}><X className="h-4 w-4 mr-1" />Remover</Button>}
+          </div>
+          <ol className="text-xs text-muted-foreground mt-4 space-y-1 list-decimal pl-4">
+            <li>Crie conta em cnpja.com</li>
+            <li>Dashboard → API → Gerar Token</li>
+            <li>Cole aqui e salve</li>
+          </ol>
         </Card>
       </div>
     </AppLayout>
