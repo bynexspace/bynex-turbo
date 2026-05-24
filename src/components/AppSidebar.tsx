@@ -89,11 +89,14 @@ export function AppSidebar() {
         )}
       </nav>
 
-      <div className="border-t border-white/5 p-3">
-        <div className="px-2 py-2 text-xs text-sidebar-foreground/60 truncate">
+      <div className="border-t border-white/5 p-3 space-y-2">
+        <div className="flex justify-center">
+          <ThemeSwitcher />
+        </div>
+        <div className="px-2 pt-1 text-xs text-sidebar-foreground/60 truncate">
           {workspace?.nome ?? "—"}
         </div>
-        <div className="px-2 text-xs text-sidebar-foreground/50 truncate mb-2">
+        <div className="px-2 text-xs text-sidebar-foreground/50 truncate">
           {user?.email}
         </div>
         <button
