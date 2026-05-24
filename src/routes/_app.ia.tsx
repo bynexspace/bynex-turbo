@@ -57,7 +57,7 @@ function IaPage() {
           {msgs.map((m, i) => (
             <div key={i} className={`flex gap-3 ${m.role === "user" ? "justify-end" : ""}`}>
               {m.role === "assistant" && <div className="w-8 h-8 rounded-full bg-brand flex items-center justify-center shrink-0"><Bot className="h-4 w-4 text-white" /></div>}
-              <div className={`max-w-2xl px-4 py-2.5 rounded-2xl text-sm ${m.role === "user" ? "bg-brand text-white" : "bg-muted prose prose-sm max-w-none"}`}>
+              <div className={`max-w-3xl px-4 py-2.5 rounded-2xl text-sm ${m.role === "user" ? "bg-brand text-white" : "bg-muted prose prose-sm max-w-none prose-p:my-1.5 prose-ul:my-1.5 prose-ol:my-1.5 prose-li:my-0.5 prose-headings:my-2 prose-blockquote:my-2 prose-blockquote:border-l-brand prose-blockquote:bg-background/50 prose-blockquote:py-1 prose-blockquote:px-3 prose-blockquote:not-italic prose-blockquote:rounded prose-strong:text-foreground prose-code:text-brand prose-code:bg-background/60 prose-code:px-1 prose-code:rounded"}`}>
                 {m.role === "assistant" ? <ReactMarkdown>{m.content}</ReactMarkdown> : m.content}
               </div>
             </div>
