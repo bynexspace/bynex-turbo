@@ -13,6 +13,7 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiCnpjaSearchRouteImport } from './routes/api.cnpja-search'
 import { Route as ApiApifySearchRouteImport } from './routes/api.apify-search'
 import { Route as ApiAiIntelRouteImport } from './routes/api.ai-intel'
 import { Route as ApiAiChatRouteImport } from './routes/api.ai-chat'
@@ -48,6 +49,11 @@ const AppRoute = AppRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCnpjaSearchRoute = ApiCnpjaSearchRouteImport.update({
+  id: '/api/cnpja-search',
+  path: '/api/cnpja-search',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiApifySearchRoute = ApiApifySearchRouteImport.update({
@@ -157,6 +163,7 @@ export interface FileRoutesByFullPath {
   '/api/ai-chat': typeof ApiAiChatRoute
   '/api/ai-intel': typeof ApiAiIntelRoute
   '/api/apify-search': typeof ApiApifySearchRoute
+  '/api/cnpja-search': typeof ApiCnpjaSearchRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -179,6 +186,7 @@ export interface FileRoutesByTo {
   '/api/ai-chat': typeof ApiAiChatRoute
   '/api/ai-intel': typeof ApiAiIntelRoute
   '/api/apify-search': typeof ApiApifySearchRoute
+  '/api/cnpja-search': typeof ApiCnpjaSearchRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -203,6 +211,7 @@ export interface FileRoutesById {
   '/api/ai-chat': typeof ApiAiChatRoute
   '/api/ai-intel': typeof ApiAiIntelRoute
   '/api/apify-search': typeof ApiApifySearchRoute
+  '/api/cnpja-search': typeof ApiCnpjaSearchRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -227,6 +236,7 @@ export interface FileRouteTypes {
     | '/api/ai-chat'
     | '/api/ai-intel'
     | '/api/apify-search'
+    | '/api/cnpja-search'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -249,6 +259,7 @@ export interface FileRouteTypes {
     | '/api/ai-chat'
     | '/api/ai-intel'
     | '/api/apify-search'
+    | '/api/cnpja-search'
   id:
     | '__root__'
     | '/'
@@ -272,6 +283,7 @@ export interface FileRouteTypes {
     | '/api/ai-chat'
     | '/api/ai-intel'
     | '/api/apify-search'
+    | '/api/cnpja-search'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -282,6 +294,7 @@ export interface RootRouteChildren {
   ApiAiChatRoute: typeof ApiAiChatRoute
   ApiAiIntelRoute: typeof ApiAiIntelRoute
   ApiApifySearchRoute: typeof ApiApifySearchRoute
+  ApiCnpjaSearchRoute: typeof ApiCnpjaSearchRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -312,6 +325,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/cnpja-search': {
+      id: '/api/cnpja-search'
+      path: '/api/cnpja-search'
+      fullPath: '/api/cnpja-search'
+      preLoaderRoute: typeof ApiCnpjaSearchRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/apify-search': {
@@ -480,6 +500,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAiChatRoute: ApiAiChatRoute,
   ApiAiIntelRoute: ApiAiIntelRoute,
   ApiApifySearchRoute: ApiApifySearchRoute,
+  ApiCnpjaSearchRoute: ApiCnpjaSearchRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -628,6 +628,7 @@ export type Database = {
       integrations: {
         Row: {
           apify_key: string | null
+          cnpja_key: string | null
           created_at: string
           id: string
           updated_at: string
@@ -635,6 +636,7 @@ export type Database = {
         }
         Insert: {
           apify_key?: string | null
+          cnpja_key?: string | null
           created_at?: string
           id?: string
           updated_at?: string
@@ -642,6 +644,7 @@ export type Database = {
         }
         Update: {
           apify_key?: string | null
+          cnpja_key?: string | null
           created_at?: string
           id?: string
           updated_at?: string

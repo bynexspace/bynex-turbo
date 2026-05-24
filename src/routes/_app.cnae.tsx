@@ -30,25 +30,55 @@ function CnaePage() {
   const [termInput, setTermInput] = useState("");
   const [results, setResults] = useState<any[]>([]);
   const [busy, setBusy] = useState(false);
+  const [uf, setUf] = useState("");
+  const [municipio, setMunicipio] = useState("");
+  const [comEmail, setComEmail] = useState(false);
+  const [comTelefone, setComTelefone] = useState(false);
+  const [somenteMatriz, setSomenteMatriz] = useState(false);
+  const [capitalMin, setCapitalMin] = useState("");
+  const [capitalMax, setCapitalMax] = useState("");
 
   const toggle = (c: string) => setSelected(s => s.includes(c) ? s.filter(x => x !== c) : [...s, c]);
 
   const buscar = async () => {
+    if (!workspace) return;
+    if (selectedCnaes.length === 0) { toast.error("Selecione ao menos um CNAE"); return; }
     setBusy(true);
-    // BrasilAPI: protótipo simplificado — em produção, integrar com fonte CNPJ paga
-    setResults([
-      { razao: "Empresa Exemplo LTDA", cnpj: "00.000.000/0001-00", capital: "100.000", email: "contato@exemplo.com", telefone: "(11) 99999-0000", abertura: "2018-05-10" },
-    ]);
+    try {
+      const { data: integ } = await supabase.from("integrations").select("cnpja_key").eq("workspace_id", workspace.id).maybeSingle();
+      const apiKey = (integ as any)?.cnpja_key;
+      if (!apiKey) {
+        toast.error("Configure sua API key CNPJá em Integrações");
+        setBusy(false);
+        return;
+      }
+      const res = await fetch("/api/cnpja-search", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          apiKey, cnaes: selectedCnaes, uf, municipio,
+          capitalMin: capitalMin ? Number(capitalMin) : undefined,
+          capitalMax: capitalMax ? Number(capitalMax) : undefined,
+          somenteMatriz, comEmail, comTelefone, limit: 20,
+        }),
+      });
+      const json = await res.json();
+      if (!res.ok) { toast.error(json.error || "Erro na busca"); setBusy(false); return; }
+      setResults(json.records || []);
+      toast.success(`${json.records?.length || 0} empresas encontradas`);
+    } catch (e: any) {
+      toast.error(e?.message || "Erro");
+    }
     setBusy(false);
-    toast.info("Busca de demonstração (conecte uma fonte CNPJ para resultados reais)");
   };
 
   const adicionar = async (r: any) => {
     await supabase.from("leads").insert({
       workspace_id: workspace!.id, nome: r.razao, telefone: r.telefone,
-      email: r.email, origem: "cnae", metadata: { cnpj: r.cnpj, capital: r.capital },
+      email: r.email, cidade: r.cidade, estado: r.uf, endereco: r.endereco,
+      origem: "cnae", metadata: { cnpj: r.cnpj, capital: r.capital, abertura: r.abertura },
     });
-    toast.success("Adicionado");
+    toast.success("Adicionado ao CRM");
   };
 
   return (
