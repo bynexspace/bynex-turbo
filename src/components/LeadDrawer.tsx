@@ -10,6 +10,7 @@ import { useAuth } from "@/lib/auth-context";
 import { toast } from "sonner";
 import { Phone, Mail, MapPin, Send, Bot, Loader2 } from "lucide-react";
 import { format } from "date-fns";
+import ReactMarkdown from "react-markdown";
 
 const STATUSES = ["novo","contactado","negociando","convertido","perdido"] as const;
 
@@ -65,12 +66,12 @@ export function LeadDrawer({ lead, onClose, onUpdated }: Props) {
     setAiInput("");
     setAiBusy(true);
     try {
-      const ctx = `Lead: ${edit.nome}, telefone ${edit.telefone || "—"}, cidade ${edit.cidade || "—"}, status ${edit.status}, origem ${edit.origem}.`;
+      const ctx = `Lead: ${edit.nome}; telefone: ${edit.telefone || "—"}; cidade: ${edit.cidade || "—"}/${edit.estado || "—"}; status: ${edit.status}; origem: ${edit.origem}.`;
       const res = await fetch("/api/ai-chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          system: `Você é um especialista em vendas B2B para serviços locais no Brasil. Contexto: ${ctx} Seja direto e acionável.`,
+          system: `Você é um SDR sênior de vendas B2B local no Brasil trabalhando este lead específico. Contexto do lead: ${ctx} Personalize abordagens usando o nome da empresa e a cidade quando relevante.`,
           messages: newMsgs,
         }),
       });
@@ -160,15 +161,15 @@ export function LeadDrawer({ lead, onClose, onUpdated }: Props) {
                 </div>
                 <div className="space-y-2 max-h-72 overflow-y-auto mb-3">
                   {aiMsgs.map((m, i) => (
-                    <div key={i} className={`p-2 rounded-lg text-sm ${m.role === "user" ? "bg-brand text-white ml-8" : "bg-muted mr-8"}`}>
-                      {m.content}
+                    <div key={i} className={`p-2.5 rounded-lg text-sm ${m.role === "user" ? "bg-brand text-white ml-8" : "bg-muted mr-8 prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-ol:my-1 prose-li:my-0.5 prose-blockquote:my-1.5 prose-blockquote:border-l-brand prose-blockquote:bg-background/60 prose-blockquote:py-1 prose-blockquote:px-2 prose-blockquote:not-italic prose-blockquote:rounded prose-strong:text-foreground prose-code:text-brand"}`}>
+                      {m.role === "assistant" ? <ReactMarkdown>{m.content}</ReactMarkdown> : m.content}
                     </div>
                   ))}
                   {aiBusy && <div className="text-xs text-muted-foreground"><Loader2 className="h-3 w-3 inline animate-spin mr-1" />Pensando…</div>}
                 </div>
                 <div className="flex gap-1 mb-2 flex-wrap">
-                  <Button size="sm" variant="outline" onClick={() => sendAI("Crie um script de WhatsApp para abordar este lead")}>Script WhatsApp</Button>
-                  <Button size="sm" variant="outline" onClick={() => sendAI("Crie um script de ligação para este lead")}>Script Ligação</Button>
+                  <Button size="sm" variant="outline" onClick={() => sendAI("Gere um script de WhatsApp em 3 mensagens curtas (abertura, gancho de valor, CTA), uma por linha em bloco de citação.")}>Script WhatsApp</Button>
+                  <Button size="sm" variant="outline" onClick={() => sendAI("Gere um script de ligação de cold call: abertura em 1 frase, 2 perguntas de descoberta e 1 CTA, em bloco de citação.")}>Script Ligação</Button>
                 </div>
                 <div className="flex gap-2">
                   <Input value={aiInput} onChange={e => setAiInput(e.target.value)} onKeyDown={e => e.key==="Enter" && sendAI()} placeholder="Pergunte algo…" />
