@@ -1,3 +1,4 @@
+import { authedFetch } from "@/lib/api-auth";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useRef, useEffect } from "react";
 import { AppLayout } from "@/components/AppLayout";

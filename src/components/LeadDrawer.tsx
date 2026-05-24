@@ -1,3 +1,4 @@
+import { authedFetch } from "@/lib/api-auth";
 import { useEffect, useState } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
