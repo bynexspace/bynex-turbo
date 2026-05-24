@@ -10,6 +10,7 @@ import { useAuth } from "@/lib/auth-context";
 import { toast } from "sonner";
 import { Phone, Mail, MapPin, Send, Bot, Loader2 } from "lucide-react";
 import { format } from "date-fns";
+import ReactMarkdown from "react-markdown";
 
 const STATUSES = ["novo","contactado","negociando","convertido","perdido"] as const;
 
