@@ -161,15 +161,15 @@ export function LeadDrawer({ lead, onClose, onUpdated }: Props) {
                 </div>
                 <div className="space-y-2 max-h-72 overflow-y-auto mb-3">
                   {aiMsgs.map((m, i) => (
-                    <div key={i} className={`p-2 rounded-lg text-sm ${m.role === "user" ? "bg-brand text-white ml-8" : "bg-muted mr-8"}`}>
-                      {m.content}
+                    <div key={i} className={`p-2.5 rounded-lg text-sm ${m.role === "user" ? "bg-brand text-white ml-8" : "bg-muted mr-8 prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-ol:my-1 prose-li:my-0.5 prose-blockquote:my-1.5 prose-blockquote:border-l-brand prose-blockquote:bg-background/60 prose-blockquote:py-1 prose-blockquote:px-2 prose-blockquote:not-italic prose-blockquote:rounded prose-strong:text-foreground prose-code:text-brand"}`}>
+                      {m.role === "assistant" ? <ReactMarkdown>{m.content}</ReactMarkdown> : m.content}
                     </div>
                   ))}
                   {aiBusy && <div className="text-xs text-muted-foreground"><Loader2 className="h-3 w-3 inline animate-spin mr-1" />Pensando…</div>}
                 </div>
                 <div className="flex gap-1 mb-2 flex-wrap">
-                  <Button size="sm" variant="outline" onClick={() => sendAI("Crie um script de WhatsApp para abordar este lead")}>Script WhatsApp</Button>
-                  <Button size="sm" variant="outline" onClick={() => sendAI("Crie um script de ligação para este lead")}>Script Ligação</Button>
+                  <Button size="sm" variant="outline" onClick={() => sendAI("Gere um script de WhatsApp em 3 mensagens curtas (abertura, gancho de valor, CTA), uma por linha em bloco de citação.")}>Script WhatsApp</Button>
+                  <Button size="sm" variant="outline" onClick={() => sendAI("Gere um script de ligação de cold call: abertura em 1 frase, 2 perguntas de descoberta e 1 CTA, em bloco de citação.")}>Script Ligação</Button>
                 </div>
                 <div className="flex gap-2">
                   <Input value={aiInput} onChange={e => setAiInput(e.target.value)} onKeyDown={e => e.key==="Enter" && sendAI()} placeholder="Pergunte algo…" />
