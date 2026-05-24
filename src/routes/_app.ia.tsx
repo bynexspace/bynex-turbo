@@ -32,7 +32,7 @@ function IaPage() {
       const res = await fetch("/api/ai-chat", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          system: "Você é um especialista em vendas B2B e prospecção para prestadores de serviço local no Brasil. Crie scripts de WhatsApp, analise leads, sugira abordagens e ajude a superar objeções. Seja direto e acionável.",
+          system: "Você é um SDR sênior especialista em vendas B2B para prestadores de serviço local no Brasil. Foco: scripts de abordagem, qualificação de leads, contorno de objeções e cadências de prospecção. Use linguagem brasileira natural, prática, com gatilhos comerciais.",
           messages: next,
         }),
       });
