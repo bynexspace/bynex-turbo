@@ -18,7 +18,7 @@ const items: { to: string; icon: any; label: string; feature: string }[] = [
   { to: "/crm", icon: Kanban, label: "CRM", feature: "crm" },
   { to: "/tarefas", icon: CheckSquare, label: "Tarefas", feature: "tarefas" },
   { to: "/leads", icon: Users, label: "Todos os Leads", feature: "leads" },
-  { to: "/flows", icon: GitBranch, label: "Flows", feature: "flows" },
+  
   { to: "/ia", icon: Bot, label: "Assistente IA", feature: "ia" },
   { to: "/inteligencia", icon: Brain, label: "Inteligência Comercial", feature: "inteligencia" },
   { to: "/educacao", icon: GraduationCap, label: "Educação", feature: "educacao" },
