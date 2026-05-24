@@ -12,15 +12,16 @@ export function AppLayout({ title, subtitle, actions, children }: Props) {
   return (
     <div className="flex min-h-screen w-full bg-background">
       <AppSidebar />
-      <div className="flex-1 flex flex-col min-w-0">
-        <header className="bg-card border-b border-border px-8 py-4 flex items-center justify-between">
+      <div className="flex-1 flex flex-col min-w-0 relative">
+        <div className="pointer-events-none absolute inset-0 grid-bg opacity-30" />
+        <header className="relative z-10 card-glass border-b border-border px-8 py-4 flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-semibold text-foreground">{title}</h1>
+            <h1 className="text-xl font-display font-semibold text-foreground tracking-tight">{title}</h1>
             {subtitle && <p className="text-sm text-muted-foreground mt-0.5">{subtitle}</p>}
           </div>
           {actions && <div className="flex items-center gap-2">{actions}</div>}
         </header>
-        <main className="flex-1 p-8 overflow-y-auto">{children}</main>
+        <main className="relative z-10 flex-1 p-8 overflow-y-auto">{children}</main>
       </div>
     </div>
   );
