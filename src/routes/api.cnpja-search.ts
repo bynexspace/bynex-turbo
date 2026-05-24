@@ -9,14 +9,14 @@ export const Route = createFileRoute("/api/cnpja-search")({
           if (!apiKey) return new Response(JSON.stringify({ error: "API key não configurada. Configure em Integrações." }), { status: 400 });
 
           const params = new URLSearchParams();
-          if (cnaes?.length) params.set("activity.id", cnaes.join(","));
-          if (uf) params.set("address.state", uf);
-          if (municipio) params.set("address.city.name", municipio);
+          if (cnaes?.length) params.set("activities.id.in", cnaes.join(","));
+          if (uf) params.set("address.state.in", uf);
+          if (municipio) params.set("address.municipality.in", municipio);
           if (capitalMin) params.set("company.equity.gte", String(capitalMin));
           if (capitalMax) params.set("company.equity.lte", String(capitalMax));
-          if (somenteMatriz) params.set("head", "true");
-          if (comEmail) params.set("emails.gte", "1");
-          if (comTelefone) params.set("phones.gte", "1");
+          if (somenteMatriz) params.set("head.eq", "true");
+          if (comEmail) params.set("emails.ex", "true");
+          if (comTelefone) params.set("phones.ex", "true");
           params.set("limit", String(limit || 20));
 
           const res = await fetch(`https://api.cnpja.com/office?${params.toString()}`, {
