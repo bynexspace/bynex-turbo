@@ -9,9 +9,9 @@ export const Route = createFileRoute("/api/cnpja-search")({
           if (!apiKey) return new Response(JSON.stringify({ error: "API key não configurada. Configure em Integrações." }), { status: 400 });
 
           const params = new URLSearchParams();
-          if (cnaes?.length) params.set("activity.main.id", cnaes.join(","));
+          if (cnaes?.length) params.set("activity.id", cnaes.join(","));
           if (uf) params.set("address.state", uf);
-          if (municipio) params.set("address.city", municipio);
+          if (municipio) params.set("address.city.name", municipio);
           if (capitalMin) params.set("company.equity.gte", String(capitalMin));
           if (capitalMax) params.set("company.equity.lte", String(capitalMax));
           if (somenteMatriz) params.set("head", "true");
@@ -23,7 +23,10 @@ export const Route = createFileRoute("/api/cnpja-search")({
             headers: { Authorization: apiKey },
           });
           const data = await res.json();
-          if (!res.ok) return new Response(JSON.stringify({ error: data?.message || "Erro CNPJá", status: res.status }), { status: res.status });
+          if (!res.ok) {
+            console.error("CNPJá error", res.status, data);
+            return new Response(JSON.stringify({ error: data?.message || `Erro CNPJá (${res.status})`, status: res.status }), { status: res.status });
+          }
 
           const records = (Array.isArray(data) ? data : data?.records || []).map((o: any) => ({
             razao: o.company?.name || o.alias || "—",
