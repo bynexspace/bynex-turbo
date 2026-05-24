@@ -8,6 +8,7 @@ import bynexMark from "@/assets/bynex-mark.png";
 import { useAuth } from "@/lib/auth-context";
 import { usePlanGate, type Plan } from "@/lib/plan-gate";
 import { UpgradeModal } from "@/components/UpgradeModal";
+import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { cn } from "@/lib/utils";
 
 const items: { to: string; icon: any; label: string; feature: string }[] = [
