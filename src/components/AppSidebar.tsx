@@ -8,6 +8,7 @@ import bynexMark from "@/assets/bynex-mark.png";
 import { useAuth } from "@/lib/auth-context";
 import { usePlanGate, type Plan } from "@/lib/plan-gate";
 import { UpgradeModal } from "@/components/UpgradeModal";
+import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { cn } from "@/lib/utils";
 
 const items: { to: string; icon: any; label: string; feature: string }[] = [
@@ -35,10 +36,10 @@ export function AppSidebar() {
   return (
     <aside className="flex h-screen w-64 flex-col bg-sidebar text-sidebar-foreground sticky top-0">
       <div className="flex items-center gap-2 px-5 py-5 border-b border-white/5">
-        <img src={bynexMark} alt="BYNEX" className="h-10 w-10 rounded-lg object-contain" />
+        <img src={bynexMark} alt="BYNEX" className="h-10 w-10 rounded-lg object-contain shadow-glow" />
         <div>
-          <div className="text-lg font-bold text-white leading-tight">BYNEX</div>
-          <div className="text-[11px] text-sidebar-foreground/60 -mt-0.5">turbo</div>
+          <div className="text-lg font-bold font-display text-grad-brand leading-tight">BYNEX</div>
+          <div className="text-[11px] text-sidebar-foreground/60 -mt-0.5 tracking-widest uppercase">turbo</div>
         </div>
       </div>
 
@@ -88,11 +89,14 @@ export function AppSidebar() {
         )}
       </nav>
 
-      <div className="border-t border-white/5 p-3">
-        <div className="px-2 py-2 text-xs text-sidebar-foreground/60 truncate">
+      <div className="border-t border-white/5 p-3 space-y-2">
+        <div className="flex justify-center">
+          <ThemeSwitcher />
+        </div>
+        <div className="px-2 pt-1 text-xs text-sidebar-foreground/60 truncate">
           {workspace?.nome ?? "—"}
         </div>
-        <div className="px-2 text-xs text-sidebar-foreground/50 truncate mb-2">
+        <div className="px-2 text-xs text-sidebar-foreground/50 truncate">
           {user?.email}
         </div>
         <button
