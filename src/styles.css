@@ -1,6 +1,7 @@
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
 
 @custom-variant dark (&:is(.dark *));
 
@@ -41,31 +42,92 @@
   --color-sidebar-hover: var(--sidebar-hover);
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);
+  --color-neon: var(--neon);
+  --font-display: "Sora", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
-:root {
+/* ============================================================
+   TEMA 1 — MIDNIGHT NEON (default)
+   Preto profundo + roxo elétrico (#7c3aed) + ciano neon (#22d3ee)
+   ============================================================ */
+:root,
+.theme-neon {
+  --radius: 0.875rem;
+
+  --brand: oklch(0.55 0.25 295);                /* #7c3aed violet */
+  --brand-foreground: oklch(0.99 0 0);
+  --neon: oklch(0.82 0.16 200);                 /* #22d3ee cyan */
+
+  --background: oklch(0.13 0.03 270);           /* near #05060f */
+  --foreground: oklch(0.97 0.01 250);
+  --card: oklch(0.18 0.05 275);                 /* #0b1024 */
+  --card-foreground: oklch(0.97 0.01 250);
+  --popover: oklch(0.18 0.05 275);
+  --popover-foreground: oklch(0.97 0.01 250);
+
+  --primary: oklch(0.55 0.25 295);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.24 0.05 275);
+  --secondary-foreground: oklch(0.97 0.01 250);
+  --muted: oklch(0.22 0.04 275);
+  --muted-foreground: oklch(0.72 0.04 260);
+  --accent: oklch(0.28 0.08 285);
+  --accent-foreground: oklch(0.97 0.01 250);
+
+  --destructive: oklch(0.65 0.24 25);
+  --destructive-foreground: oklch(0.99 0 0);
+  --success: oklch(0.72 0.18 160);
+  --success-foreground: oklch(0.1 0 0);
+  --warning: oklch(0.8 0.16 75);
+  --warning-foreground: oklch(0.15 0 0);
+  --info: oklch(0.82 0.16 200);                 /* cyan */
+  --info-foreground: oklch(0.1 0 0);
+
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 10%);
+  --ring: oklch(0.7 0.22 295);
+
+  --sidebar: oklch(0.15 0.04 275);
+  --sidebar-foreground: oklch(0.85 0.03 260);
+  --sidebar-active: oklch(0.55 0.25 295);
+  --sidebar-active-foreground: oklch(0.99 0 0);
+  --sidebar-hover: oklch(0.22 0.06 280);
+
+  --grad-brand: linear-gradient(135deg, oklch(0.55 0.25 295), oklch(0.82 0.16 200));
+  --grad-surface: radial-gradient(1200px 600px at 10% -10%, oklch(0.55 0.25 295 / 0.18), transparent 60%),
+                  radial-gradient(900px 500px at 100% 0%, oklch(0.82 0.16 200 / 0.12), transparent 55%);
+  --glow-brand: 0 0 0 1px oklch(0.55 0.25 295 / 0.35), 0 10px 40px -10px oklch(0.55 0.25 295 / 0.45);
+  --glow-neon: 0 0 0 1px oklch(0.82 0.16 200 / 0.3), 0 8px 30px -10px oklch(0.82 0.16 200 / 0.4);
+}
+
+/* ============================================================
+   TEMA 2 — CLOUD WHITE
+   Claro, limpo, SaaS azul (#3b82f6)
+   ============================================================ */
+.theme-cloud {
   --radius: 0.75rem;
 
-  /* Brand */
-  --brand: oklch(0.51 0.16 248);                /* #185FA5 */
+  --brand: oklch(0.62 0.2 255);                 /* #3b82f6 */
   --brand-foreground: oklch(0.99 0 0);
+  --neon: oklch(0.62 0.2 255);
 
-  /* Surfaces */
-  --background: oklch(0.98 0.005 250);          /* #f8fafc */
-  --foreground: oklch(0.22 0.04 260);
+  --background: oklch(0.985 0.003 250);         /* #fafbfc */
+  --foreground: oklch(0.2 0.03 260);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.22 0.04 260);
+  --card-foreground: oklch(0.2 0.03 260);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.22 0.04 260);
+  --popover-foreground: oklch(0.2 0.03 260);
 
-  --primary: oklch(0.51 0.16 248);              /* brand blue */
+  --primary: oklch(0.62 0.2 255);
   --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.96 0.01 250);
-  --secondary-foreground: oklch(0.22 0.04 260);
+  --secondary: oklch(0.95 0.01 250);            /* #e8ecf1 */
+  --secondary-foreground: oklch(0.2 0.03 260);
   --muted: oklch(0.96 0.008 250);
-  --muted-foreground: oklch(0.5 0.03 258);
-  --accent: oklch(0.95 0.02 250);
-  --accent-foreground: oklch(0.22 0.04 260);
+  --muted-foreground: oklch(0.55 0.03 255);     /* #94a3b8 */
+  --accent: oklch(0.94 0.02 255);
+  --accent-foreground: oklch(0.2 0.03 260);
 
   --destructive: oklch(0.6 0.22 27);
   --destructive-foreground: oklch(0.99 0 0);
@@ -78,40 +140,67 @@
 
   --border: oklch(0.92 0.01 255);
   --input: oklch(0.92 0.01 255);
-  --ring: oklch(0.55 0.14 248);
+  --ring: oklch(0.62 0.2 255);
 
-  /* Sidebar — escuro azul-marinho */
-  --sidebar: oklch(0.21 0.04 260);              /* #0f172a */
+  --sidebar: oklch(0.21 0.04 260);
   --sidebar-foreground: oklch(0.85 0.02 250);
-  --sidebar-active: oklch(0.51 0.16 248);
+  --sidebar-active: oklch(0.62 0.2 255);
   --sidebar-active-foreground: oklch(0.99 0 0);
   --sidebar-hover: oklch(0.27 0.04 260);
-}
 
-.dark {
-  --background: oklch(0.16 0.03 260);
-  --foreground: oklch(0.96 0.01 250);
-  --card: oklch(0.21 0.04 260);
-  --card-foreground: oklch(0.96 0.01 250);
-  --popover: oklch(0.21 0.04 260);
-  --popover-foreground: oklch(0.96 0.01 250);
-  --primary: oklch(0.55 0.14 248);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.27 0.04 260);
-  --secondary-foreground: oklch(0.96 0.01 250);
-  --muted: oklch(0.27 0.04 260);
-  --muted-foreground: oklch(0.7 0.03 250);
-  --accent: oklch(0.27 0.04 260);
-  --accent-foreground: oklch(0.96 0.01 250);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 12%);
+  --grad-brand: linear-gradient(135deg, oklch(0.62 0.2 255), oklch(0.72 0.14 220));
+  --grad-surface: radial-gradient(1200px 600px at 10% -10%, oklch(0.62 0.2 255 / 0.08), transparent 60%);
+  --glow-brand: 0 1px 0 oklch(0 0 0 / 0.04), 0 10px 30px -10px oklch(0.62 0.2 255 / 0.25);
+  --glow-neon: 0 4px 20px -8px oklch(0.62 0.2 255 / 0.3);
 }
 
 @layer base {
   * { border-color: var(--color-border); }
-  body {
+  html, body {
     background-color: var(--color-background);
     color: var(--color-foreground);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    font-family: var(--font-sans);
+    font-feature-settings: "cv11", "ss01", "ss03";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    background-image: var(--grad-surface);
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+  h1, h2, h3, h4, h5, h6, .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.015em;
+  }
+  ::selection {
+    background: var(--brand);
+    color: var(--brand-foreground);
+  }
+}
+
+/* Helpers utilitários (futuristas) */
+@layer utilities {
+  .bg-grad-brand { background-image: var(--grad-brand); }
+  .text-grad-brand {
+    background-image: var(--grad-brand);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .shadow-glow { box-shadow: var(--glow-brand); }
+  .shadow-glow-neon { box-shadow: var(--glow-neon); }
+  .ring-glow { box-shadow: 0 0 0 1px var(--brand), 0 0 24px -4px var(--brand); }
+  .card-glass {
+    background: color-mix(in oklab, var(--card) 70%, transparent);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border: 1px solid var(--border);
+  }
+  .grid-bg {
+    background-image:
+      linear-gradient(to right, color-mix(in oklab, var(--foreground) 6%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in oklab, var(--foreground) 6%, transparent) 1px, transparent 1px);
+    background-size: 32px 32px;
   }
 }
