@@ -34,7 +34,7 @@ function AdminPage() {
   const load = async () => {
     if (!user) return;
     try {
-      setData(await listAllWorkspaces({ data: { userId: user.id } }));
+      setData(await listAllWorkspaces());
     } catch (e: any) {
       toast.error(e.message ?? "Falha ao carregar");
     }
@@ -49,7 +49,7 @@ function AdminPage() {
     if (!user) return;
     setBusy(workspaceId);
     try {
-      await updateWorkspacePlan({ data: { userId: user.id, workspaceId, plano } });
+      await updateWorkspacePlan({ data: { workspaceId, plano } });
       toast.success("Plano atualizado");
       await load();
     } catch (e: any) {
@@ -64,7 +64,7 @@ function AdminPage() {
     const next: Status = current === "ativo" ? "suspenso" : "ativo";
     setBusy(workspaceId);
     try {
-      await updateWorkspaceStatus({ data: { userId: user.id, workspaceId, status: next } });
+      await updateWorkspaceStatus({ data: { workspaceId, status: next } });
       toast.success(next === "ativo" ? "Conta ativada" : "Conta suspensa");
       await load();
     } catch (e: any) {
@@ -79,7 +79,7 @@ function AdminPage() {
     setBusy(workspaceId);
     try {
       const r = await sendPasswordReset({
-        data: { userId: user.id, workspaceId, redirectTo: `${window.location.origin}/reset-password` },
+        data: { workspaceId, redirectTo: `${window.location.origin}/reset-password` },
       });
       toast.success(`E-mail de recuperação enviado para ${r.email}`);
     } catch (e: any) {
@@ -233,7 +233,7 @@ function CreateClientDialog({
     }
     setBusy(true);
     try {
-      const r = await createClient({ data: { userId: user.id, ...form } });
+      const r = await createClient({ data: { ...form } });
       onCreated({ email: r.email, senha: r.senhaProvisoria });
       setForm({ email: "", fullName: "", workspaceName: "", plano: "essencial" });
     } catch (e: any) {

@@ -1,13 +1,22 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { authenticateRequest, assertWorkspaceMember } from "@/lib/api-server-auth.server";
 
 export const Route = createFileRoute("/api/ai-intel")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const auth = await authenticateRequest(request);
+        if (auth instanceof Response) return auth;
+
         try {
           const body = await request.json() as any;
           const { workspaceId, modo, estado, cidade, segmento, cnae, porte, tempo, dores } = body;
+
+          if (!workspaceId) return Response.json({ error: "workspaceId obrigatório" }, { status: 400 });
+          const forbidden = await assertWorkspaceMember(auth.userId, workspaceId);
+          if (forbidden) return forbidden;
+
           const apiKey = process.env.LOVABLE_API_KEY;
           if (!apiKey) return Response.json({ error: "API key ausente" }, { status: 500 });
 

@@ -1,3 +1,4 @@
+import { authedFetch } from "@/lib/api-auth";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { AppLayout } from "@/components/AppLayout";
@@ -46,8 +47,8 @@ function IntelPage() {
     if (!estado || !segmento) return toast.error("Preencha estado e segmento");
     setBusy(true);
     try {
-      const res = await fetch("/api/ai-intel", {
-        method: "POST", headers: { "Content-Type": "application/json" },
+      const res = await authedFetch("/api/ai-intel", {
+        method: "POST",
         body: JSON.stringify({ workspaceId: workspace!.id, modo, estado, cidade, segmento, cnae, porte, tempo, dores }),
       });
       const data = await res.json();

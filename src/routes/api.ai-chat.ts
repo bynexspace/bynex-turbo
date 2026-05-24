@@ -1,9 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { authenticateRequest } from "@/lib/api-server-auth.server";
 
 export const Route = createFileRoute("/api/ai-chat")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const auth = await authenticateRequest(request);
+        if (auth instanceof Response) return auth;
+
         try {
           const { system, messages } = await request.json() as {
             system: string; messages: { role: "user"|"assistant"; content: string }[];

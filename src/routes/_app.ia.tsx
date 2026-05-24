@@ -1,3 +1,4 @@
+import { authedFetch } from "@/lib/api-auth";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useRef, useEffect } from "react";
 import { AppLayout } from "@/components/AppLayout";
@@ -29,8 +30,8 @@ function IaPage() {
     const next = [...msgs, { role: "user" as const, content: m }];
     setMsgs(next); setInput(""); setBusy(true);
     try {
-      const res = await fetch("/api/ai-chat", {
-        method: "POST", headers: { "Content-Type": "application/json" },
+      const res = await authedFetch("/api/ai-chat", {
+        method: "POST",
         body: JSON.stringify({
           system: "Você é um SDR sênior especialista em vendas B2B para prestadores de serviço local no Brasil. Foco: scripts de abordagem, qualificação de leads, contorno de objeções e cadências de prospecção. Use linguagem brasileira natural, prática, com gatilhos comerciais.",
           messages: next,

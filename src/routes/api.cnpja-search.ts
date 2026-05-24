@@ -1,12 +1,25 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { authenticateRequest, assertWorkspaceMember } from "@/lib/api-server-auth.server";
 
 export const Route = createFileRoute("/api/cnpja-search")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const auth = await authenticateRequest(request);
+        if (auth instanceof Response) return auth;
+
         try {
-          const { apiKey, cnaes, uf, municipio, capitalMin, capitalMax, somenteMatriz, comEmail, comTelefone, limit } = await request.json();
-          if (!apiKey) return new Response(JSON.stringify({ error: "API key não configurada. Configure em Integrações." }), { status: 400 });
+          const { workspaceId, cnaes, uf, municipio, capitalMin, capitalMax, somenteMatriz, comEmail, comTelefone, limit } = await request.json();
+
+          if (!workspaceId) return new Response(JSON.stringify({ error: "workspaceId obrigatório" }), { status: 400 });
+          const forbidden = await assertWorkspaceMember(auth.userId, workspaceId);
+          if (forbidden) return forbidden;
+
+          const { data: integ } = await supabaseAdmin
+            .from("integrations").select("cnpja_key").eq("workspace_id", workspaceId).maybeSingle();
+          const apiKey = (integ as any)?.cnpja_key;
+          if (!apiKey) return new Response(JSON.stringify({ error: "API key CNPJá não configurada. Configure em Integrações." }), { status: 400 });
 
           const params = new URLSearchParams();
           if (cnaes?.length) params.set("activities.id.in", cnaes.join(","));

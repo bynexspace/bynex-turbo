@@ -1,12 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { authenticateRequest, assertWorkspaceMember } from "@/lib/api-server-auth.server";
 
 export const Route = createFileRoute("/api/apify-search")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const auth = await authenticateRequest(request);
+        if (auth instanceof Response) return auth;
+
         try {
           const { workspaceId, query, qty, estado, cidade, bairro } = await request.json() as any;
+
+          if (!workspaceId) return Response.json({ error: "workspaceId obrigatório" }, { status: 400 });
+          const forbidden = await assertWorkspaceMember(auth.userId, workspaceId);
+          if (forbidden) return forbidden;
 
           const { data: integ } = await supabaseAdmin
             .from("integrations").select("apify_key").eq("workspace_id", workspaceId).maybeSingle();

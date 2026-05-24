@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 async function assertAdmin(userId: string) {
   const { data, error } = await supabaseAdmin
@@ -13,39 +14,29 @@ async function assertAdmin(userId: string) {
 }
 
 /**
- * Recebe userId explicitamente do client (auth-context já validou a sessão).
- * Auto-seed: se não há admins ainda, o primeiro user vira admin.
- * Sempre retorna estrutura previsível — nunca lança.
+ * Verifica se o usuário autenticado é admin.
+ * Sem auto-seed — admins devem ser criados via migration/SQL.
  */
 export const checkAdmin = createServerFn({ method: "POST" })
-  .inputValidator((d) => z.object({ userId: z.string().uuid() }).parse(d))
-  .handler(async ({ data }) => {
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
     try {
-      const { count } = await supabaseAdmin
-        .from("app_admins")
-        .select("*", { count: "exact", head: true });
-
-      if ((count ?? 0) === 0) {
-        await supabaseAdmin.from("app_admins").insert({ user_id: data.userId });
-        return { isAdmin: true, bootstrapped: true };
-      }
-
       const { data: row } = await supabaseAdmin
         .from("app_admins")
         .select("user_id")
-        .eq("user_id", data.userId)
+        .eq("user_id", context.userId)
         .maybeSingle();
-      return { isAdmin: !!row, bootstrapped: false };
+      return { isAdmin: !!row };
     } catch (e) {
       console.error("checkAdmin failed:", e);
-      return { isAdmin: false, bootstrapped: false };
+      return { isAdmin: false };
     }
   });
 
 export const listAllWorkspaces = createServerFn({ method: "POST" })
-  .inputValidator((d) => z.object({ userId: z.string().uuid() }).parse(d))
-  .handler(async ({ data }) => {
-    await assertAdmin(data.userId);
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertAdmin(context.userId);
     const { data: workspaces } = await supabaseAdmin
       .from("workspaces")
       .select("id, nome, plano, status, stripe_customer_id, created_at")
@@ -106,17 +97,17 @@ export const listAllWorkspaces = createServerFn({ method: "POST" })
   });
 
 export const updateWorkspacePlan = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((d) =>
     z
       .object({
-        userId: z.string().uuid(),
         workspaceId: z.string().uuid(),
         plano: z.enum(["essencial", "pro", "premium"]),
       })
       .parse(d),
   )
-  .handler(async ({ data }) => {
-    await assertAdmin(data.userId);
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.userId);
     const { error } = await supabaseAdmin
       .from("workspaces")
       .update({ plano: data.plano })
@@ -126,17 +117,17 @@ export const updateWorkspacePlan = createServerFn({ method: "POST" })
   });
 
 export const updateWorkspaceStatus = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((d) =>
     z
       .object({
-        userId: z.string().uuid(),
         workspaceId: z.string().uuid(),
         status: z.enum(["ativo", "suspenso"]),
       })
       .parse(d),
   )
-  .handler(async ({ data }) => {
-    await assertAdmin(data.userId);
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.userId);
     const { error } = await supabaseAdmin
       .from("workspaces")
       .update({ status: data.status })
@@ -146,19 +137,18 @@ export const updateWorkspaceStatus = createServerFn({ method: "POST" })
   });
 
 export const sendPasswordReset = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((d) =>
     z
       .object({
-        userId: z.string().uuid(),
         workspaceId: z.string().uuid(),
         redirectTo: z.string().url(),
       })
       .parse(d),
   )
-  .handler(async ({ data }) => {
-    await assertAdmin(data.userId);
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.userId);
 
-    // Buscar o owner do workspace
     const { data: member } = await supabaseAdmin
       .from("workspace_members")
       .select("user_id, profiles!inner(email)")
@@ -170,7 +160,6 @@ export const sendPasswordReset = createServerFn({ method: "POST" })
     const email = (member as any)?.profiles?.email;
     if (!email) throw new Error("Owner do workspace não encontrado");
 
-    // resetPasswordForEmail dispara o e-mail via SMTP do Supabase
     const { error } = await supabaseAdmin.auth.resetPasswordForEmail(email, {
       redirectTo: data.redirectTo,
     });
@@ -188,16 +177,11 @@ function genPassword(len = 12) {
   return out;
 }
 
-/**
- * Cria um cliente novo: user no auth + workspace + membership owner.
- * O trigger handle_new_user já cria workspace + membership + integrations,
- * então renomeamos o workspace pré-criado e ajustamos o plano.
- */
 export const createClient = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((d) =>
     z
       .object({
-        userId: z.string().uuid(),
         email: z.string().email(),
         fullName: z.string().min(1),
         workspaceName: z.string().min(1),
@@ -205,8 +189,8 @@ export const createClient = createServerFn({ method: "POST" })
       })
       .parse(d),
   )
-  .handler(async ({ data }) => {
-    await assertAdmin(data.userId);
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.userId);
 
     const senhaProvisoria = genPassword(12);
 
@@ -223,8 +207,6 @@ export const createClient = createServerFn({ method: "POST" })
 
     const newUserId = created.data.user.id;
 
-    // O trigger handle_new_user já criou: profile + workspace + membership(owner) + integrations.
-    // Buscamos o workspace recém-criado (owner = newUserId) e ajustamos nome/plano.
     const { data: member } = await supabaseAdmin
       .from("workspace_members")
       .select("workspace_id")
@@ -241,7 +223,6 @@ export const createClient = createServerFn({ method: "POST" })
         .update({ nome: data.workspaceName, plano: data.plano, status: "ativo" })
         .eq("id", workspaceId);
     } else {
-      // Fallback caso o trigger não tenha rodado
       const { data: ws, error: wsErr } = await supabaseAdmin
         .from("workspaces")
         .insert({ nome: data.workspaceName, plano: data.plano, status: "ativo" })
