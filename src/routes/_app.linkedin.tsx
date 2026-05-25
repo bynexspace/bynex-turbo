@@ -215,6 +215,24 @@ function LinkedinPage() {
             />
           </div>
 
+          <details className="text-xs">
+            <summary className="cursor-pointer text-muted-foreground hover:text-foreground">
+              Actor Apify {actorId ? <span className="text-brand">({actorId})</span> : <span>(padrão)</span>}
+            </summary>
+            <div className="mt-2 space-y-2">
+              <Input
+                placeholder="ex: apimaestro~linkedin-profile-batch-scraper-no-cookies"
+                value={actorId}
+                onChange={(e) => setActorId(e.target.value)}
+              />
+              <p className="text-muted-foreground">
+                Cole o ID de um actor de LinkedIn da sua conta Apify (formato <code>usuario~nome-do-actor</code>).
+                A maioria dos actors LinkedIn é paga — alugue em{" "}
+                <a className="text-brand underline" href="https://apify.com/store?category=SOCIAL_MEDIA&search=linkedin" target="_blank" rel="noreferrer">apify.com/store</a>.
+              </p>
+            </div>
+          </details>
+
           <p className="text-xs text-muted-foreground">
             Custo estimado: ${cost} ({qty} × $0.01) · via Apify
           </p>
