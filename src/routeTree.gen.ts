@@ -13,6 +13,7 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiLinkedinSearchRouteImport } from './routes/api.linkedin-search'
 import { Route as ApiCnpjaSearchRouteImport } from './routes/api.cnpja-search'
 import { Route as ApiApifySearchRouteImport } from './routes/api.apify-search'
 import { Route as ApiAiIntelRouteImport } from './routes/api.ai-intel'
@@ -49,6 +50,11 @@ const AppRoute = AppRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiLinkedinSearchRoute = ApiLinkedinSearchRouteImport.update({
+  id: '/api/linkedin-search',
+  path: '/api/linkedin-search',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiCnpjaSearchRoute = ApiCnpjaSearchRouteImport.update({
@@ -164,6 +170,7 @@ export interface FileRoutesByFullPath {
   '/api/ai-intel': typeof ApiAiIntelRoute
   '/api/apify-search': typeof ApiApifySearchRoute
   '/api/cnpja-search': typeof ApiCnpjaSearchRoute
+  '/api/linkedin-search': typeof ApiLinkedinSearchRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -187,6 +194,7 @@ export interface FileRoutesByTo {
   '/api/ai-intel': typeof ApiAiIntelRoute
   '/api/apify-search': typeof ApiApifySearchRoute
   '/api/cnpja-search': typeof ApiCnpjaSearchRoute
+  '/api/linkedin-search': typeof ApiLinkedinSearchRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -212,6 +220,7 @@ export interface FileRoutesById {
   '/api/ai-intel': typeof ApiAiIntelRoute
   '/api/apify-search': typeof ApiApifySearchRoute
   '/api/cnpja-search': typeof ApiCnpjaSearchRoute
+  '/api/linkedin-search': typeof ApiLinkedinSearchRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -237,6 +246,7 @@ export interface FileRouteTypes {
     | '/api/ai-intel'
     | '/api/apify-search'
     | '/api/cnpja-search'
+    | '/api/linkedin-search'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -260,6 +270,7 @@ export interface FileRouteTypes {
     | '/api/ai-intel'
     | '/api/apify-search'
     | '/api/cnpja-search'
+    | '/api/linkedin-search'
   id:
     | '__root__'
     | '/'
@@ -284,6 +295,7 @@ export interface FileRouteTypes {
     | '/api/ai-intel'
     | '/api/apify-search'
     | '/api/cnpja-search'
+    | '/api/linkedin-search'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -295,6 +307,7 @@ export interface RootRouteChildren {
   ApiAiIntelRoute: typeof ApiAiIntelRoute
   ApiApifySearchRoute: typeof ApiApifySearchRoute
   ApiCnpjaSearchRoute: typeof ApiCnpjaSearchRoute
+  ApiLinkedinSearchRoute: typeof ApiLinkedinSearchRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -325,6 +338,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/linkedin-search': {
+      id: '/api/linkedin-search'
+      path: '/api/linkedin-search'
+      fullPath: '/api/linkedin-search'
+      preLoaderRoute: typeof ApiLinkedinSearchRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/cnpja-search': {
@@ -501,17 +521,8 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAiIntelRoute: ApiAiIntelRoute,
   ApiApifySearchRoute: ApiApifySearchRoute,
   ApiCnpjaSearchRoute: ApiCnpjaSearchRoute,
+  ApiLinkedinSearchRoute: ApiLinkedinSearchRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
