@@ -65,12 +65,17 @@ function LinkedinPage() {
   const [results, setResults] = useState<LinkedinResult[]>([]);
   const [busy, setBusy] = useState(false);
   const [added, setAdded] = useState<Set<number>>(new Set());
+  const [actorId, setActorId] = useState<string>(() => localStorage.getItem("linkedin_actor_id") || "");
 
   useEffect(() => {
     if (!workspace) return;
     supabase.from("integrations").select("apify_key").eq("workspace_id", workspace.id).maybeSingle()
       .then(({ data }) => setHasKey(!!data?.apify_key));
   }, [workspace]);
+
+  useEffect(() => {
+    localStorage.setItem("linkedin_actor_id", actorId);
+  }, [actorId]);
 
   const buscar = async () => {
     if (!query.trim() && !searchUrl.trim()) {
@@ -89,6 +94,7 @@ function LinkedinPage() {
           searchUrl: searchUrl.trim() || undefined,
           location: location.trim() || undefined,
           qty: Number(qty),
+          actorId: actorId.trim() || undefined,
         }),
       });
       const data = await res.json();
