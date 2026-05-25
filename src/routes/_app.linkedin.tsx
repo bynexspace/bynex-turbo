@@ -65,12 +65,17 @@ function LinkedinPage() {
   const [results, setResults] = useState<LinkedinResult[]>([]);
   const [busy, setBusy] = useState(false);
   const [added, setAdded] = useState<Set<number>>(new Set());
+  const [actorId, setActorId] = useState<string>(() => localStorage.getItem("linkedin_actor_id") || "");
 
   useEffect(() => {
     if (!workspace) return;
     supabase.from("integrations").select("apify_key").eq("workspace_id", workspace.id).maybeSingle()
       .then(({ data }) => setHasKey(!!data?.apify_key));
   }, [workspace]);
+
+  useEffect(() => {
+    localStorage.setItem("linkedin_actor_id", actorId);
+  }, [actorId]);
 
   const buscar = async () => {
     if (!query.trim() && !searchUrl.trim()) {
@@ -89,6 +94,7 @@ function LinkedinPage() {
           searchUrl: searchUrl.trim() || undefined,
           location: location.trim() || undefined,
           qty: Number(qty),
+          actorId: actorId.trim() || undefined,
         }),
       });
       const data = await res.json();
@@ -208,6 +214,24 @@ function LinkedinPage() {
               onChange={(e) => setSearchUrl(e.target.value)}
             />
           </div>
+
+          <details className="text-xs">
+            <summary className="cursor-pointer text-muted-foreground hover:text-foreground">
+              Actor Apify {actorId ? <span className="text-brand">({actorId})</span> : <span>(padrão)</span>}
+            </summary>
+            <div className="mt-2 space-y-2">
+              <Input
+                placeholder="ex: apimaestro~linkedin-profile-batch-scraper-no-cookies"
+                value={actorId}
+                onChange={(e) => setActorId(e.target.value)}
+              />
+              <p className="text-muted-foreground">
+                Cole o ID de um actor de LinkedIn da sua conta Apify (formato <code>usuario~nome-do-actor</code>).
+                A maioria dos actors LinkedIn é paga — alugue em{" "}
+                <a className="text-brand underline" href="https://apify.com/store?category=SOCIAL_MEDIA&search=linkedin" target="_blank" rel="noreferrer">apify.com/store</a>.
+              </p>
+            </div>
+          </details>
 
           <p className="text-xs text-muted-foreground">
             Custo estimado: ${cost} ({qty} × $0.01) · via Apify

@@ -63,7 +63,18 @@ export const Route = createFileRoute("/api/linkedin-search")({
           if (!res.ok) {
             const t = await res.text();
             console.error("[linkedin-search] apify error", res.status, t.slice(0, 500));
-            return Response.json({ error: `Apify (${res.status}): ${t.slice(0, 300)}` }, { status: 502 });
+            let friendly = `Apify (${res.status})`;
+            try {
+              const parsed = JSON.parse(t);
+              const msg = parsed?.error?.message || parsed?.message;
+              const type = parsed?.error?.type;
+              if (type === "actor-is-not-rented") {
+                friendly = `Actor "${actor}" é pago e precisa ser alugado na sua conta Apify. ${msg || ""}`.trim();
+              } else if (msg) {
+                friendly = `Apify: ${msg}`;
+              }
+            } catch { friendly = `${friendly}: ${t.slice(0, 200)}`; }
+            return Response.json({ error: friendly, actor }, { status: 502 });
           }
           const items = (await res.json()) as any[];
 
