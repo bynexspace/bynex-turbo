@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { createContext, useContext, useEffect, useRef, useState, ReactNode } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { checkAdmin } from "@/server/admin.functions";
@@ -29,6 +29,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [workspace, setWorkspace] = useState<WorkspaceCtx | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
+  // Evita recarregar workspace/admin a cada TOKEN_REFRESHED (a cada ~30s)
+  const loadedForUserId = useRef<string | null>(null);
 
   const loadWorkspace = async (userId: string) => {
     const { data } = await supabase
@@ -46,7 +48,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const loadAdmin = async (_userId: string) => {
+  const loadAdmin = async () => {
     try {
       const r = await checkAdmin();
       setIsAdmin(r.isAdmin);
@@ -55,31 +57,43 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  useEffect(() => {
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, sess) => {
-      setSession(sess);
-      setUser(sess?.user ?? null);
-      if (sess?.user) {
-        setTimeout(() => {
-          loadWorkspace(sess.user.id);
-          loadAdmin(sess.user.id);
-        }, 0);
-      } else {
-        setWorkspace(null);
-        setIsAdmin(false);
-      }
-    });
+  const hydrateUser = async (uid: string) => {
+    if (loadedForUserId.current === uid) return; // já carregado para este usuário
+    loadedForUserId.current = uid;
+    await Promise.all([loadWorkspace(uid), loadAdmin()]);
+  };
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
+  useEffect(() => {
+    let unsub: (() => void) | undefined;
+
+    // 1) Hidrata a partir da sessão atual (uma vez)
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
-      if (session?.user) {
-        Promise.all([loadWorkspace(session.user.id), loadAdmin(session.user.id)]).finally(() => setLoading(false));
-      } else setLoading(false);
+      if (session?.user) await hydrateUser(session.user.id);
+      setLoading(false);
     });
 
-    return () => sub.subscription.unsubscribe();
+    // 2) Reage apenas a SIGNED_IN / SIGNED_OUT — ignora TOKEN_REFRESHED, USER_UPDATED, INITIAL_SESSION
+    const { data: sub } = supabase.auth.onAuthStateChange((event, sess) => {
+      setSession(sess);
+      setUser(sess?.user ?? null);
+      if (event === "SIGNED_OUT") {
+        loadedForUserId.current = null;
+        setWorkspace(null);
+        setIsAdmin(false);
+        return;
+      }
+      if (event === "SIGNED_IN" && sess?.user) {
+        // executa fora do callback do Supabase para evitar deadlock
+        setTimeout(() => { hydrateUser(sess.user.id); }, 0);
+      }
+    });
+    unsub = () => sub.subscription.unsubscribe();
+
+    return () => unsub?.();
   }, []);
+
 
   const signOut = async () => { await supabase.auth.signOut(); };
   const refreshWorkspace = async () => { if (user) await loadWorkspace(user.id); };
