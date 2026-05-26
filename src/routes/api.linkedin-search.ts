@@ -56,14 +56,15 @@ export const Route = createFileRoute("/api/linkedin-search")({
           };
           Object.keys(input).forEach(k => input[k] === undefined && delete input[k]);
 
-          const res = await fetch(
-            `https://api.apify.com/v2/acts/${actor}/run-sync-get-dataset-items?token=${apifyKey}`,
+          // Start run async (sync endpoint frequently exceeds Worker request limits and drops the connection)
+          const startRes = await fetch(
+            `https://api.apify.com/v2/acts/${actor}/runs?token=${apifyKey}`,
             { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(input) }
           );
-          if (!res.ok) {
-            const t = await res.text();
-            console.error("[linkedin-search] apify error", res.status, t.slice(0, 500));
-            let friendly = `Apify (${res.status})`;
+          if (!startRes.ok) {
+            const t = await startRes.text();
+            console.error("[linkedin-search] apify start error", startRes.status, t.slice(0, 500));
+            let friendly = `Apify (${startRes.status})`;
             try {
               const parsed = JSON.parse(t);
               const msg = parsed?.error?.message || parsed?.message;
@@ -76,7 +77,38 @@ export const Route = createFileRoute("/api/linkedin-search")({
             } catch { friendly = `${friendly}: ${t.slice(0, 200)}`; }
             return Response.json({ error: friendly, actor }, { status: 502 });
           }
-          const items = (await res.json()) as any[];
+          const startData = (await startRes.json()) as any;
+          const runId = startData?.data?.id;
+          const datasetId = startData?.data?.defaultDatasetId;
+          if (!runId || !datasetId) {
+            return Response.json({ error: "Apify: resposta inválida ao iniciar run", actor }, { status: 502 });
+          }
+
+          // Poll run status (max ~55s)
+          const deadline = Date.now() + 55_000;
+          let status = "READY";
+          while (Date.now() < deadline) {
+            await new Promise(r => setTimeout(r, 2500));
+            const sRes = await fetch(`https://api.apify.com/v2/actor-runs/${runId}?token=${apifyKey}`);
+            if (!sRes.ok) continue;
+            const sJson = (await sRes.json()) as any;
+            status = sJson?.data?.status;
+            if (status && status !== "READY" && status !== "RUNNING") break;
+          }
+          if (status !== "SUCCEEDED") {
+            return Response.json({
+              error: status === "RUNNING" || status === "READY"
+                ? `Busca ainda rodando na Apify (run ${runId}). Tente uma quantidade menor ou consulte os resultados em apify.com em alguns minutos.`
+                : `Apify run terminou com status: ${status}`,
+              actor, runId,
+            }, { status: 504 });
+          }
+
+          const itemsRes = await fetch(`https://api.apify.com/v2/datasets/${datasetId}/items?token=${apifyKey}&clean=true&limit=${qty}`);
+          if (!itemsRes.ok) {
+            return Response.json({ error: `Apify dataset (${itemsRes.status})`, actor }, { status: 502 });
+          }
+          const items = (await itemsRes.json()) as any[];
 
           const results = items.map((i) => ({
             name: i.fullName || i.name || i.title || i.companyName || "—",
