@@ -17,7 +17,7 @@ export function OrganicWelcomeModal({ open, onClose }: Props) {
               <Sprout className="h-6 w-6 text-organic" />
             </div>
             <div>
-              <DialogTitle className="text-xl">Bem-vindo ao Modo Organic</DialogTitle>
+              <DialogTitle className="text-xl">Bem-vindo ao Modo Organick</DialogTitle>
               <p className="text-sm text-muted-foreground mt-0.5">
                 A metodologia Organic agora integrada à sua operação
               </p>
@@ -29,8 +29,16 @@ export function OrganicWelcomeModal({ open, onClose }: Props) {
           {[
             { icon: Users, title: "Módulo de Referidos", desc: "Pedidos e validação de indicações (Passos 6 e 7)." },
             { icon: ListChecks, title: "As 3 Listas", desc: "Ciclo Social, Possíveis Indicadores e Antigos Clientes." },
-            { icon: Kanban, title: "Tracker dos 7 Passos", desc: "CRM com pipeline da metodologia e checklists contextuais." },
-            { icon: Flame, title: "Check-in Diário", desc: "Tanque emocional, meta de abordagens e streak de execução." },
+            {
+              icon: Kanban,
+              title: "Tracker dos 7 Passos",
+              desc: "CRM com pipeline da metodologia e checklists contextuais.",
+            },
+            {
+              icon: Flame,
+              title: "Check-in Diário",
+              desc: "Tanque emocional, meta de abordagens e streak de execução.",
+            },
           ].map((f) => (
             <div key={f.title} className="flex gap-3 rounded-lg border border-border p-3 bg-card/50">
               <f.icon className="h-5 w-5 text-organic shrink-0 mt-0.5" />
