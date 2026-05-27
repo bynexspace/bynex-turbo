@@ -19,7 +19,7 @@ export function OrganicWelcomeModal({ open, onClose }: Props) {
             <div>
               <DialogTitle className="text-xl">Bem-vindo ao Modo Organick</DialogTitle>
               <p className="text-sm text-muted-foreground mt-0.5">
-                A metodologia Organic agora integrada à sua operação
+                A metodologia Organick agora integrada à sua operação
               </p>
             </div>
           </div>
