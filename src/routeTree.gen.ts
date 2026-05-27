@@ -30,6 +30,7 @@ import { Route as AppFlowsRouteImport } from './routes/_app.flows'
 import { Route as AppEducacaoRouteImport } from './routes/_app.educacao'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppCrmRouteImport } from './routes/_app.crm'
+import { Route as AppConfiguracoesRouteImport } from './routes/_app.configuracoes'
 import { Route as AppCnaeRouteImport } from './routes/_app.cnae'
 import { Route as AppAdminRouteImport } from './routes/_app.admin'
 
@@ -137,6 +138,11 @@ const AppCrmRoute = AppCrmRouteImport.update({
   path: '/crm',
   getParentRoute: () => AppRoute,
 } as any)
+const AppConfiguracoesRoute = AppConfiguracoesRouteImport.update({
+  id: '/configuracoes',
+  path: '/configuracoes',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppCnaeRoute = AppCnaeRouteImport.update({
   id: '/cnae',
   path: '/cnae',
@@ -154,6 +160,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/admin': typeof AppAdminRoute
   '/cnae': typeof AppCnaeRoute
+  '/configuracoes': typeof AppConfiguracoesRoute
   '/crm': typeof AppCrmRoute
   '/dashboard': typeof AppDashboardRoute
   '/educacao': typeof AppEducacaoRoute
@@ -178,6 +185,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/admin': typeof AppAdminRoute
   '/cnae': typeof AppCnaeRoute
+  '/configuracoes': typeof AppConfiguracoesRoute
   '/crm': typeof AppCrmRoute
   '/dashboard': typeof AppDashboardRoute
   '/educacao': typeof AppEducacaoRoute
@@ -204,6 +212,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/_app/admin': typeof AppAdminRoute
   '/_app/cnae': typeof AppCnaeRoute
+  '/_app/configuracoes': typeof AppConfiguracoesRoute
   '/_app/crm': typeof AppCrmRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/educacao': typeof AppEducacaoRoute
@@ -230,6 +239,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/admin'
     | '/cnae'
+    | '/configuracoes'
     | '/crm'
     | '/dashboard'
     | '/educacao'
@@ -254,6 +264,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/admin'
     | '/cnae'
+    | '/configuracoes'
     | '/crm'
     | '/dashboard'
     | '/educacao'
@@ -279,6 +290,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/_app/admin'
     | '/_app/cnae'
+    | '/_app/configuracoes'
     | '/_app/crm'
     | '/_app/dashboard'
     | '/_app/educacao'
@@ -459,6 +471,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCrmRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/configuracoes': {
+      id: '/_app/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/configuracoes'
+      preLoaderRoute: typeof AppConfiguracoesRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/cnae': {
       id: '/_app/cnae'
       path: '/cnae'
@@ -479,6 +498,7 @@ declare module '@tanstack/react-router' {
 interface AppRouteChildren {
   AppAdminRoute: typeof AppAdminRoute
   AppCnaeRoute: typeof AppCnaeRoute
+  AppConfiguracoesRoute: typeof AppConfiguracoesRoute
   AppCrmRoute: typeof AppCrmRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppEducacaoRoute: typeof AppEducacaoRoute
@@ -496,6 +516,7 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppAdminRoute: AppAdminRoute,
   AppCnaeRoute: AppCnaeRoute,
+  AppConfiguracoesRoute: AppConfiguracoesRoute,
   AppCrmRoute: AppCrmRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppEducacaoRoute: AppEducacaoRoute,
