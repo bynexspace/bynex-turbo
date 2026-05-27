@@ -19,7 +19,9 @@ import { Route as ApiApifySearchRouteImport } from './routes/api.apify-search'
 import { Route as ApiAiIntelRouteImport } from './routes/api.ai-intel'
 import { Route as ApiAiChatRouteImport } from './routes/api.ai-chat'
 import { Route as AppTarefasRouteImport } from './routes/_app.tarefas'
+import { Route as AppReferidosRouteImport } from './routes/_app.referidos'
 import { Route as AppPlanoRouteImport } from './routes/_app.plano'
+import { Route as AppListasRouteImport } from './routes/_app.listas'
 import { Route as AppLinkedinRouteImport } from './routes/_app.linkedin'
 import { Route as AppLeadsRouteImport } from './routes/_app.leads'
 import { Route as AppInteligenciaRouteImport } from './routes/_app.inteligencia'
@@ -30,6 +32,7 @@ import { Route as AppFlowsRouteImport } from './routes/_app.flows'
 import { Route as AppEducacaoRouteImport } from './routes/_app.educacao'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppCrmRouteImport } from './routes/_app.crm'
+import { Route as AppConfiguracoesRouteImport } from './routes/_app.configuracoes'
 import { Route as AppCnaeRouteImport } from './routes/_app.cnae'
 import { Route as AppAdminRouteImport } from './routes/_app.admin'
 
@@ -82,9 +85,19 @@ const AppTarefasRoute = AppTarefasRouteImport.update({
   path: '/tarefas',
   getParentRoute: () => AppRoute,
 } as any)
+const AppReferidosRoute = AppReferidosRouteImport.update({
+  id: '/referidos',
+  path: '/referidos',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppPlanoRoute = AppPlanoRouteImport.update({
   id: '/plano',
   path: '/plano',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppListasRoute = AppListasRouteImport.update({
+  id: '/listas',
+  path: '/listas',
   getParentRoute: () => AppRoute,
 } as any)
 const AppLinkedinRoute = AppLinkedinRouteImport.update({
@@ -137,6 +150,11 @@ const AppCrmRoute = AppCrmRouteImport.update({
   path: '/crm',
   getParentRoute: () => AppRoute,
 } as any)
+const AppConfiguracoesRoute = AppConfiguracoesRouteImport.update({
+  id: '/configuracoes',
+  path: '/configuracoes',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppCnaeRoute = AppCnaeRouteImport.update({
   id: '/cnae',
   path: '/cnae',
@@ -154,6 +172,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/admin': typeof AppAdminRoute
   '/cnae': typeof AppCnaeRoute
+  '/configuracoes': typeof AppConfiguracoesRoute
   '/crm': typeof AppCrmRoute
   '/dashboard': typeof AppDashboardRoute
   '/educacao': typeof AppEducacaoRoute
@@ -164,7 +183,9 @@ export interface FileRoutesByFullPath {
   '/inteligencia': typeof AppInteligenciaRoute
   '/leads': typeof AppLeadsRoute
   '/linkedin': typeof AppLinkedinRoute
+  '/listas': typeof AppListasRoute
   '/plano': typeof AppPlanoRoute
+  '/referidos': typeof AppReferidosRoute
   '/tarefas': typeof AppTarefasRoute
   '/api/ai-chat': typeof ApiAiChatRoute
   '/api/ai-intel': typeof ApiAiIntelRoute
@@ -178,6 +199,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/admin': typeof AppAdminRoute
   '/cnae': typeof AppCnaeRoute
+  '/configuracoes': typeof AppConfiguracoesRoute
   '/crm': typeof AppCrmRoute
   '/dashboard': typeof AppDashboardRoute
   '/educacao': typeof AppEducacaoRoute
@@ -188,7 +210,9 @@ export interface FileRoutesByTo {
   '/inteligencia': typeof AppInteligenciaRoute
   '/leads': typeof AppLeadsRoute
   '/linkedin': typeof AppLinkedinRoute
+  '/listas': typeof AppListasRoute
   '/plano': typeof AppPlanoRoute
+  '/referidos': typeof AppReferidosRoute
   '/tarefas': typeof AppTarefasRoute
   '/api/ai-chat': typeof ApiAiChatRoute
   '/api/ai-intel': typeof ApiAiIntelRoute
@@ -204,6 +228,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/_app/admin': typeof AppAdminRoute
   '/_app/cnae': typeof AppCnaeRoute
+  '/_app/configuracoes': typeof AppConfiguracoesRoute
   '/_app/crm': typeof AppCrmRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/educacao': typeof AppEducacaoRoute
@@ -214,7 +239,9 @@ export interface FileRoutesById {
   '/_app/inteligencia': typeof AppInteligenciaRoute
   '/_app/leads': typeof AppLeadsRoute
   '/_app/linkedin': typeof AppLinkedinRoute
+  '/_app/listas': typeof AppListasRoute
   '/_app/plano': typeof AppPlanoRoute
+  '/_app/referidos': typeof AppReferidosRoute
   '/_app/tarefas': typeof AppTarefasRoute
   '/api/ai-chat': typeof ApiAiChatRoute
   '/api/ai-intel': typeof ApiAiIntelRoute
@@ -230,6 +257,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/admin'
     | '/cnae'
+    | '/configuracoes'
     | '/crm'
     | '/dashboard'
     | '/educacao'
@@ -240,7 +268,9 @@ export interface FileRouteTypes {
     | '/inteligencia'
     | '/leads'
     | '/linkedin'
+    | '/listas'
     | '/plano'
+    | '/referidos'
     | '/tarefas'
     | '/api/ai-chat'
     | '/api/ai-intel'
@@ -254,6 +284,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/admin'
     | '/cnae'
+    | '/configuracoes'
     | '/crm'
     | '/dashboard'
     | '/educacao'
@@ -264,7 +295,9 @@ export interface FileRouteTypes {
     | '/inteligencia'
     | '/leads'
     | '/linkedin'
+    | '/listas'
     | '/plano'
+    | '/referidos'
     | '/tarefas'
     | '/api/ai-chat'
     | '/api/ai-intel'
@@ -279,6 +312,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/_app/admin'
     | '/_app/cnae'
+    | '/_app/configuracoes'
     | '/_app/crm'
     | '/_app/dashboard'
     | '/_app/educacao'
@@ -289,7 +323,9 @@ export interface FileRouteTypes {
     | '/_app/inteligencia'
     | '/_app/leads'
     | '/_app/linkedin'
+    | '/_app/listas'
     | '/_app/plano'
+    | '/_app/referidos'
     | '/_app/tarefas'
     | '/api/ai-chat'
     | '/api/ai-intel'
@@ -382,11 +418,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppTarefasRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/referidos': {
+      id: '/_app/referidos'
+      path: '/referidos'
+      fullPath: '/referidos'
+      preLoaderRoute: typeof AppReferidosRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/plano': {
       id: '/_app/plano'
       path: '/plano'
       fullPath: '/plano'
       preLoaderRoute: typeof AppPlanoRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/listas': {
+      id: '/_app/listas'
+      path: '/listas'
+      fullPath: '/listas'
+      preLoaderRoute: typeof AppListasRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/linkedin': {
@@ -459,6 +509,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCrmRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/configuracoes': {
+      id: '/_app/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/configuracoes'
+      preLoaderRoute: typeof AppConfiguracoesRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/cnae': {
       id: '/_app/cnae'
       path: '/cnae'
@@ -479,6 +536,7 @@ declare module '@tanstack/react-router' {
 interface AppRouteChildren {
   AppAdminRoute: typeof AppAdminRoute
   AppCnaeRoute: typeof AppCnaeRoute
+  AppConfiguracoesRoute: typeof AppConfiguracoesRoute
   AppCrmRoute: typeof AppCrmRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppEducacaoRoute: typeof AppEducacaoRoute
@@ -489,13 +547,16 @@ interface AppRouteChildren {
   AppInteligenciaRoute: typeof AppInteligenciaRoute
   AppLeadsRoute: typeof AppLeadsRoute
   AppLinkedinRoute: typeof AppLinkedinRoute
+  AppListasRoute: typeof AppListasRoute
   AppPlanoRoute: typeof AppPlanoRoute
+  AppReferidosRoute: typeof AppReferidosRoute
   AppTarefasRoute: typeof AppTarefasRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppAdminRoute: AppAdminRoute,
   AppCnaeRoute: AppCnaeRoute,
+  AppConfiguracoesRoute: AppConfiguracoesRoute,
   AppCrmRoute: AppCrmRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppEducacaoRoute: AppEducacaoRoute,
@@ -506,7 +567,9 @@ const AppRouteChildren: AppRouteChildren = {
   AppInteligenciaRoute: AppInteligenciaRoute,
   AppLeadsRoute: AppLeadsRoute,
   AppLinkedinRoute: AppLinkedinRoute,
+  AppListasRoute: AppListasRoute,
   AppPlanoRoute: AppPlanoRoute,
+  AppReferidosRoute: AppReferidosRoute,
   AppTarefasRoute: AppTarefasRoute,
 }
 

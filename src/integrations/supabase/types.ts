@@ -103,6 +103,45 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_checkins: {
+        Row: {
+          actual_approaches: number
+          completed: boolean
+          created_at: string
+          date: string
+          emotional_tank_level: number
+          id: string
+          target_approaches: number
+          updated_at: string
+          user_id: string
+          workspace_id: string
+        }
+        Insert: {
+          actual_approaches?: number
+          completed?: boolean
+          created_at?: string
+          date?: string
+          emotional_tank_level: number
+          id?: string
+          target_approaches?: number
+          updated_at?: string
+          user_id: string
+          workspace_id: string
+        }
+        Update: {
+          actual_approaches?: number
+          completed?: boolean
+          created_at?: string
+          date?: string
+          emotional_tank_level?: number
+          id?: string
+          target_approaches?: number
+          updated_at?: string
+          user_id?: string
+          workspace_id?: string
+        }
+        Relationships: []
+      }
       email_campaigns: {
         Row: {
           agendada_para: string | null
@@ -766,6 +805,7 @@ export type Database = {
           endereco: string | null
           estado: string | null
           id: string
+          list_type: Database["public"]["Enums"]["lead_list_type"]
           metadata: Json | null
           nome: string
           origem: Database["public"]["Enums"]["lead_origin"]
@@ -785,6 +825,7 @@ export type Database = {
           endereco?: string | null
           estado?: string | null
           id?: string
+          list_type?: Database["public"]["Enums"]["lead_list_type"]
           metadata?: Json | null
           nome: string
           origem?: Database["public"]["Enums"]["lead_origin"]
@@ -804,6 +845,7 @@ export type Database = {
           endereco?: string | null
           estado?: string | null
           id?: string
+          list_type?: Database["public"]["Enums"]["lead_list_type"]
           metadata?: Json | null
           nome?: string
           origem?: Database["public"]["Enums"]["lead_origin"]
@@ -844,6 +886,48 @@ export type Database = {
           email?: string
           full_name?: string | null
           id?: string
+        }
+        Relationships: []
+      }
+      referrals: {
+        Row: {
+          created_at: string
+          id: string
+          notes: string | null
+          referred_email: string | null
+          referred_name: string
+          referred_phone: string | null
+          referrer_lead_id: string
+          status: Database["public"]["Enums"]["referral_status"]
+          updated_at: string
+          validation_message_sent_at: string | null
+          workspace_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          referred_email?: string | null
+          referred_name: string
+          referred_phone?: string | null
+          referrer_lead_id: string
+          status?: Database["public"]["Enums"]["referral_status"]
+          updated_at?: string
+          validation_message_sent_at?: string | null
+          workspace_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          referred_email?: string | null
+          referred_name?: string
+          referred_phone?: string | null
+          referrer_lead_id?: string
+          status?: Database["public"]["Enums"]["referral_status"]
+          updated_at?: string
+          validation_message_sent_at?: string | null
+          workspace_id?: string
         }
         Relationships: []
       }
@@ -904,6 +988,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_preferences: {
+        Row: {
+          created_at: string
+          organic_first_seen: boolean
+          organic_mode_enabled: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          organic_first_seen?: boolean
+          organic_mode_enabled?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          organic_first_seen?: boolean
+          organic_mode_enabled?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       workspace_members: {
         Row: {
@@ -1015,6 +1123,11 @@ export type Database = {
         | "unsubscribe"
         | "manual"
       intel_mode: "sdr" | "closer"
+      lead_list_type:
+        | "cold"
+        | "list_1_social"
+        | "list_2_referrer"
+        | "list_3_past_client"
       lead_origin: "google_maps" | "cnae" | "linkedin" | "manual"
       lead_status:
         | "novo"
@@ -1023,6 +1136,13 @@ export type Database = {
         | "convertido"
         | "perdido"
       plan_type: "essencial" | "pro" | "premium"
+      referral_status:
+        | "pending_validation"
+        | "validated"
+        | "approached"
+        | "in_conversation"
+        | "converted"
+        | "lost"
       task_status: "pendente" | "feita" | "adiada"
       task_type: "whatsapp" | "ligacao" | "email"
       workspace_status: "ativo" | "suspenso"
@@ -1188,6 +1308,12 @@ export const Constants = {
         "manual",
       ],
       intel_mode: ["sdr", "closer"],
+      lead_list_type: [
+        "cold",
+        "list_1_social",
+        "list_2_referrer",
+        "list_3_past_client",
+      ],
       lead_origin: ["google_maps", "cnae", "linkedin", "manual"],
       lead_status: [
         "novo",
@@ -1197,6 +1323,14 @@ export const Constants = {
         "perdido",
       ],
       plan_type: ["essencial", "pro", "premium"],
+      referral_status: [
+        "pending_validation",
+        "validated",
+        "approached",
+        "in_conversation",
+        "converted",
+        "lost",
+      ],
       task_status: ["pendente", "feita", "adiada"],
       task_type: ["whatsapp", "ligacao", "email"],
       workspace_status: ["ativo", "suspenso"],

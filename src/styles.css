@@ -43,6 +43,8 @@
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);
   --color-neon: var(--neon);
+  --color-organic: var(--organic);
+
   --font-display: "Sora", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
@@ -59,6 +61,8 @@
   --brand: oklch(0.55 0.25 295);                /* #7c3aed violet */
   --brand-foreground: oklch(0.99 0 0);
   --neon: oklch(0.82 0.16 200);                 /* #22d3ee cyan */
+  --organic: oklch(0.85 0.22 140);              /* verde-fluor Organic */
+
 
   --background: oklch(0.13 0.03 270);           /* near #05060f */
   --foreground: oklch(0.97 0.01 250);
@@ -112,6 +116,8 @@
   --brand: oklch(0.62 0.2 255);                 /* #3b82f6 */
   --brand-foreground: oklch(0.99 0 0);
   --neon: oklch(0.62 0.2 255);
+  --organic: oklch(0.72 0.2 145);
+
 
   --background: oklch(0.985 0.003 250);         /* #fafbfc */
   --foreground: oklch(0.2 0.03 260);
