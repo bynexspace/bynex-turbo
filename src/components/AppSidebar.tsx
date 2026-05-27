@@ -108,7 +108,7 @@ export function AppSidebar() {
 
         {organic && (
           <div className="mt-3 pt-3 border-t border-organic/20 space-y-0.5">
-            <div className="px-3 pb-1 text-[10px] uppercase tracking-widest text-organic font-bold">Organic</div>
+            <div className="px-3 pb-1 text-[10px] uppercase tracking-widest text-organic font-bold">Organick</div>
             {organicItems.map((it) => {
               const active = path === it.to;
               return (
