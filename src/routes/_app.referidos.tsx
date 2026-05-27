@@ -80,7 +80,7 @@ function ReferidosPage() {
     load();
   };
 
-  const setStatus = async (r: any, status: string) => {
+  const setStatus = async (r: any, status: "pending_validation"|"validated"|"approached"|"in_conversation"|"converted"|"lost") => {
     await supabase.from("referrals").update({ status }).eq("id", r.id);
     load();
   };
