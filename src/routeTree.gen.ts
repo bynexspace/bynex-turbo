@@ -21,6 +21,7 @@ import { Route as ApiAiChatRouteImport } from './routes/api.ai-chat'
 import { Route as AppTarefasRouteImport } from './routes/_app.tarefas'
 import { Route as AppReferidosRouteImport } from './routes/_app.referidos'
 import { Route as AppPlanoRouteImport } from './routes/_app.plano'
+import { Route as AppListasRouteImport } from './routes/_app.listas'
 import { Route as AppLinkedinRouteImport } from './routes/_app.linkedin'
 import { Route as AppLeadsRouteImport } from './routes/_app.leads'
 import { Route as AppInteligenciaRouteImport } from './routes/_app.inteligencia'
@@ -92,6 +93,11 @@ const AppReferidosRoute = AppReferidosRouteImport.update({
 const AppPlanoRoute = AppPlanoRouteImport.update({
   id: '/plano',
   path: '/plano',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppListasRoute = AppListasRouteImport.update({
+  id: '/listas',
+  path: '/listas',
   getParentRoute: () => AppRoute,
 } as any)
 const AppLinkedinRoute = AppLinkedinRouteImport.update({
@@ -177,6 +183,7 @@ export interface FileRoutesByFullPath {
   '/inteligencia': typeof AppInteligenciaRoute
   '/leads': typeof AppLeadsRoute
   '/linkedin': typeof AppLinkedinRoute
+  '/listas': typeof AppListasRoute
   '/plano': typeof AppPlanoRoute
   '/referidos': typeof AppReferidosRoute
   '/tarefas': typeof AppTarefasRoute
@@ -203,6 +210,7 @@ export interface FileRoutesByTo {
   '/inteligencia': typeof AppInteligenciaRoute
   '/leads': typeof AppLeadsRoute
   '/linkedin': typeof AppLinkedinRoute
+  '/listas': typeof AppListasRoute
   '/plano': typeof AppPlanoRoute
   '/referidos': typeof AppReferidosRoute
   '/tarefas': typeof AppTarefasRoute
@@ -231,6 +239,7 @@ export interface FileRoutesById {
   '/_app/inteligencia': typeof AppInteligenciaRoute
   '/_app/leads': typeof AppLeadsRoute
   '/_app/linkedin': typeof AppLinkedinRoute
+  '/_app/listas': typeof AppListasRoute
   '/_app/plano': typeof AppPlanoRoute
   '/_app/referidos': typeof AppReferidosRoute
   '/_app/tarefas': typeof AppTarefasRoute
@@ -259,6 +268,7 @@ export interface FileRouteTypes {
     | '/inteligencia'
     | '/leads'
     | '/linkedin'
+    | '/listas'
     | '/plano'
     | '/referidos'
     | '/tarefas'
@@ -285,6 +295,7 @@ export interface FileRouteTypes {
     | '/inteligencia'
     | '/leads'
     | '/linkedin'
+    | '/listas'
     | '/plano'
     | '/referidos'
     | '/tarefas'
@@ -312,6 +323,7 @@ export interface FileRouteTypes {
     | '/_app/inteligencia'
     | '/_app/leads'
     | '/_app/linkedin'
+    | '/_app/listas'
     | '/_app/plano'
     | '/_app/referidos'
     | '/_app/tarefas'
@@ -418,6 +430,13 @@ declare module '@tanstack/react-router' {
       path: '/plano'
       fullPath: '/plano'
       preLoaderRoute: typeof AppPlanoRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/listas': {
+      id: '/_app/listas'
+      path: '/listas'
+      fullPath: '/listas'
+      preLoaderRoute: typeof AppListasRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/linkedin': {
@@ -528,6 +547,7 @@ interface AppRouteChildren {
   AppInteligenciaRoute: typeof AppInteligenciaRoute
   AppLeadsRoute: typeof AppLeadsRoute
   AppLinkedinRoute: typeof AppLinkedinRoute
+  AppListasRoute: typeof AppListasRoute
   AppPlanoRoute: typeof AppPlanoRoute
   AppReferidosRoute: typeof AppReferidosRoute
   AppTarefasRoute: typeof AppTarefasRoute
@@ -547,6 +567,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppInteligenciaRoute: AppInteligenciaRoute,
   AppLeadsRoute: AppLeadsRoute,
   AppLinkedinRoute: AppLinkedinRoute,
+  AppListasRoute: AppListasRoute,
   AppPlanoRoute: AppPlanoRoute,
   AppReferidosRoute: AppReferidosRoute,
   AppTarefasRoute: AppTarefasRoute,
