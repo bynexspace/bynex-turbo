@@ -116,6 +116,8 @@
   --brand: oklch(0.62 0.2 255);                 /* #3b82f6 */
   --brand-foreground: oklch(0.99 0 0);
   --neon: oklch(0.62 0.2 255);
+  --organic: oklch(0.72 0.2 145);
+
 
   --background: oklch(0.985 0.003 250);         /* #fafbfc */
   --foreground: oklch(0.2 0.03 260);
