@@ -1,9 +1,25 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useState } from "react";
 import {
-  LayoutDashboard, MapPin, Search, Linkedin, Kanban, CheckSquare, Users,
-  Bot, Brain, GraduationCap, Plug, CreditCard, Shield, LogOut, Lock,
-  Sprout, UserPlus, ListChecks, Settings,
+  LayoutDashboard,
+  MapPin,
+  Search,
+  Linkedin,
+  Kanban,
+  CheckSquare,
+  Users,
+  Bot,
+  Brain,
+  GraduationCap,
+  Plug,
+  CreditCard,
+  Shield,
+  LogOut,
+  Lock,
+  Sprout,
+  UserPlus,
+  ListChecks,
+  Settings,
 } from "lucide-react";
 import bynexMark from "@/assets/bynex-mark.png";
 import { useAuth } from "@/lib/auth-context";
@@ -64,14 +80,18 @@ export function AppSidebar() {
           const ok = allows(it.feature);
           const cls = cn(
             "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors w-full",
-            active ? "bg-sidebar-active text-sidebar-active-foreground font-medium"
-                   : "hover:bg-sidebar-hover text-sidebar-foreground/85",
+            active
+              ? "bg-sidebar-active text-sidebar-active-foreground font-medium"
+              : "hover:bg-sidebar-hover text-sidebar-foreground/85",
             !ok && "opacity-60",
           );
           if (!ok) {
             return (
-              <button key={it.to} className={cls}
-                onClick={() => setGate({ feature: it.label, plan: requiredFor(it.feature) ?? "pro" })}>
+              <button
+                key={it.to}
+                className={cls}
+                onClick={() => setGate({ feature: it.label, plan: requiredFor(it.feature) ?? "pro" })}
+              >
                 <it.icon className="h-4 w-4 shrink-0" />
                 <span className="truncate flex-1 text-left">{it.label}</span>
                 <Lock className="h-3 w-3 shrink-0 opacity-70" />
@@ -92,12 +112,16 @@ export function AppSidebar() {
             {organicItems.map((it) => {
               const active = path === it.to;
               return (
-                <Link key={it.to} to={it.to}
+                <Link
+                  key={it.to}
+                  to={it.to}
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
-                    active ? "bg-organic/15 text-organic font-medium"
-                           : "hover:bg-sidebar-hover text-sidebar-foreground/85"
-                  )}>
+                    active
+                      ? "bg-organic/15 text-organic font-medium"
+                      : "hover:bg-sidebar-hover text-sidebar-foreground/85",
+                  )}
+                >
                   <it.icon className="h-4 w-4 shrink-0" />
                   <span className="truncate">{it.label}</span>
                 </Link>
@@ -107,49 +131,71 @@ export function AppSidebar() {
         )}
 
         {isAdmin && (
-          <Link to="/admin"
+          <Link
+            to="/admin"
             className={cn(
               "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors mt-2 border-t border-white/5 pt-3",
-              path === "/admin" ? "bg-sidebar-active text-sidebar-active-foreground font-medium"
-                                : "hover:bg-sidebar-hover text-sidebar-foreground/85"
-            )}>
+              path === "/admin"
+                ? "bg-sidebar-active text-sidebar-active-foreground font-medium"
+                : "hover:bg-sidebar-hover text-sidebar-foreground/85",
+            )}
+          >
             <Shield className="h-4 w-4 shrink-0" /> Admin
           </Link>
         )}
       </nav>
 
       <div className="border-t border-white/5 p-3 space-y-2">
-        <div className={cn(
-          "flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm border",
-          organic ? "border-organic/40 bg-organic/10" : "border-white/5 bg-white/[0.02]"
-        )}>
+        <div
+          className={cn(
+            "flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm border",
+            organic ? "border-organic/40 bg-organic/10" : "border-white/5 bg-white/[0.02]",
+          )}
+        >
           <div className="flex items-center gap-2 min-w-0">
             <Sprout className={cn("h-4 w-4 shrink-0", organic ? "text-organic" : "text-sidebar-foreground/60")} />
             <span className={cn("truncate text-xs font-medium", organic && "text-organic")}>
-              {organic ? "Modo Organic Ativo" : "Modo Organic"}
+              {organic ? "Modo Organick Ativo" : "Modo Organick"}
             </span>
           </div>
           <Switch checked={organic} onCheckedChange={onToggleOrganic} />
         </div>
 
-        <Link to="/configuracoes" className="flex items-center gap-2 rounded-lg px-3 py-2 text-xs text-sidebar-foreground/70 hover:bg-sidebar-hover">
+        <Link
+          to="/configuracoes"
+          className="flex items-center gap-2 rounded-lg px-3 py-2 text-xs text-sidebar-foreground/70 hover:bg-sidebar-hover"
+        >
           <Settings className="h-3.5 w-3.5" /> Configurações
         </Link>
 
-        <div className="flex justify-center"><ThemeSwitcher /></div>
+        <div className="flex justify-center">
+          <ThemeSwitcher />
+        </div>
         <div className="px-2 pt-1 text-xs text-sidebar-foreground/60 truncate">{workspace?.nome ?? "—"}</div>
         <div className="px-2 text-xs text-sidebar-foreground/50 truncate">{user?.email}</div>
-        <button onClick={signOut}
-          className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-sidebar-foreground/80 hover:bg-sidebar-hover transition-colors">
+        <button
+          onClick={signOut}
+          className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-sidebar-foreground/80 hover:bg-sidebar-hover transition-colors"
+        >
           <LogOut className="h-4 w-4" /> Sair
         </button>
       </div>
 
       {gate && (
-        <UpgradeModal open={!!gate} onOpenChange={(v) => !v && setGate(null)}
-          feature={gate.feature} requiredPlan={gate.plan} />
+        <UpgradeModal
+          open={!!gate}
+          onOpenChange={(v) => !v && setGate(null)}
+          feature={gate.feature}
+          requiredPlan={gate.plan}
+        />
       )}
-      <OrganicWelcomeModal open={welcome} onClose={async () => { setWelcome(false); await markFirstSeen(); }} />
+      <OrganicWelcomeModal
+        open={welcome}
+        onClose={async () => {
+          setWelcome(false);
+          await markFirstSeen();
+        }}
+      />
     </aside>
   );
 }
