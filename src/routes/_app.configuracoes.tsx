@@ -19,7 +19,10 @@ function ConfigPage() {
     if (v && !firstSeen) setWelcome(true);
   };
 
-  const closeWelcome = async () => { setWelcome(false); await markFirstSeen(); };
+  const closeWelcome = async () => {
+    setWelcome(false);
+    await markFirstSeen();
+  };
 
   return (
     <AppLayout title="Configurações" subtitle="Preferências da sua conta">
@@ -32,11 +35,11 @@ function ConfigPage() {
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="font-semibold">Modo Organic</h3>
+                  <h3 className="font-semibold">Modo Organick</h3>
                   {enabled && <Badge className="bg-organic/15 text-organic border-organic/30">Ativo</Badge>}
                 </div>
                 <p className="text-sm text-muted-foreground mt-1 max-w-md">
-                  Ativa a metodologia Organic (Vitor/Nick Moretti): Referidos, As 3 Listas, Tracker dos 7 Passos e Check-in Diário.
+                  Ativa a metodologia Organick: Referidos, As 3 Listas, Tracker dos 7 Passos e Check-in Diário.
                 </p>
               </div>
             </div>
