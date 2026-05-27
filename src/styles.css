@@ -61,6 +61,8 @@
   --brand: oklch(0.55 0.25 295);                /* #7c3aed violet */
   --brand-foreground: oklch(0.99 0 0);
   --neon: oklch(0.82 0.16 200);                 /* #22d3ee cyan */
+  --organic: oklch(0.85 0.22 140);              /* verde-fluor Organic */
+
 
   --background: oklch(0.13 0.03 270);           /* near #05060f */
   --foreground: oklch(0.97 0.01 250);
