@@ -6,11 +6,36 @@ import { authenticateRequest, assertWorkspaceMember } from "@/lib/api-server-aut
 // Usuário pode trocar no campo input.actorId se quiser outro actor.
 const DEFAULT_ACTORS = {
   profile: "bebity~linkedin-premium-actor",
-  company: "bebity~linkedin-companies-scraper",
+  company: "johnvc~linkedin-company-api",
   partnership: "bebity~linkedin-premium-actor",
 } as const;
 
 type Mode = keyof typeof DEFAULT_ACTORS;
+
+// johnvc~linkedin-company-api reads company pages, not search terms, so the
+// company search first looks up linkedin.com/company/ pages on DuckDuckGo.
+async function findCompanyPages(apifyKey: string, terms: string, qty: number): Promise<string[]> {
+  const res = await fetch(
+    `https://api.apify.com/v2/acts/johnvc~DuckDuckGo-Scraper-for-serp-rankings/run-sync-get-dataset-items?token=${apifyKey}&timeout=45`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      // About 1 result in 3 is a company page; page 1 has 10 results, later pages 15.
+      // Capped at 6 pages (about 30 s), so one search finds at most about 30 companies.
+      body: JSON.stringify({ query: `${terms} linkedin`, max_pages: Math.min(Math.ceil((qty * 3) / 15), 6) }),
+    }
+  );
+  if (!res.ok) throw new Error(`Apify DuckDuckGo (${res.status}): ${(await res.text()).slice(0, 200)}`);
+  const pages = (await res.json()) as any[];
+  const urls = new Set<string>();
+  for (const page of pages) {
+    for (const r of page?.organic_results ?? []) {
+      const m = /^https:\/\/(?:[a-z]{2,3}\.)?linkedin\.com\/company\/([^/?#]+)/i.exec(r?.link ?? "");
+      if (m) urls.add(`https://www.linkedin.com/company/${m[1]}`);
+    }
+  }
+  return [...urls].slice(0, qty);
+}
 
 export const Route = createFileRoute("/api/linkedin-search")({
   server: {
@@ -46,7 +71,7 @@ export const Route = createFileRoute("/api/linkedin-search")({
           const actor = actorId || DEFAULT_ACTORS[mode];
 
           // Input genérico aceito pela maioria dos actors LinkedIn
-          const input: Record<string, unknown> = {
+          let input: Record<string, unknown> = {
             searchQueries: query ? [query] : undefined,
             startUrls: searchUrl ? [{ url: searchUrl }] : undefined,
             maxResults: qty,
@@ -55,6 +80,18 @@ export const Route = createFileRoute("/api/linkedin-search")({
             mode,
           };
           Object.keys(input).forEach(k => input[k] === undefined && delete input[k]);
+
+          if (actor === DEFAULT_ACTORS.company) {
+            // A pasted LinkedIn search URL carries its terms in ?keywords=
+            let terms = query;
+            if (!terms && searchUrl) {
+              try { terms = new URL(searchUrl).searchParams.get("keywords") ?? undefined; } catch { /* not a URL */ }
+            }
+            if (!terms) return Response.json({ error: "Informe um termo de busca" }, { status: 400 });
+            const companyUrls = await findCompanyPages(apifyKey, [terms, location].filter(Boolean).join(" "), qty);
+            if (companyUrls.length === 0) return Response.json({ results: [], actor });
+            input = { companyUrls };
+          }
 
           // Start run async (sync endpoint frequently exceeds Worker request limits and drops the connection)
           const startRes = await fetch(
@@ -110,12 +147,12 @@ export const Route = createFileRoute("/api/linkedin-search")({
           }
           const items = (await itemsRes.json()) as any[];
 
-          const results = items.map((i) => ({
+          const results = items.filter((i) => i.result_type !== "error").map((i) => ({
             name: i.fullName || i.name || i.title || i.companyName || "—",
-            headline: i.headline || i.position || i.tagline || i.description || null,
+            headline: i.headline || i.position || i.tagline || i.slogan || i.description || null,
             company: i.companyName || i.currentCompany || i.company || null,
-            location: i.location || i.locationName || i.addressCountry || null,
-            url: i.url || i.profileUrl || i.linkedinUrl || i.link || null,
+            location: i.location || i.locationName || i.addressCountry || i.headquarters || null,
+            url: i.url || i.profileUrl || i.linkedinUrl || i.link || i.publicUrl || null,
             email: i.email || i.emailAddress || null,
             phone: i.phone || i.phoneNumber || null,
             website: i.website || i.companyWebsite || null,
